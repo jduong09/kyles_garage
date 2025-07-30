@@ -1,3 +1,4 @@
+import { Header } from "../header";
 import { Landing } from "../landing/landing";
 
 export function meta() {
@@ -8,5 +9,8 @@ export function meta() {
 }
 
 export default function Home() {
-  return <Landing />;
+  return (<div>
+    <Header />
+    <Landing />
+  </div>);
 }

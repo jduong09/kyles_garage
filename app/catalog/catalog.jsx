@@ -1,3 +1,9 @@
+import { Header } from '../header';
+
 export default function Catalog() {
-  return <div>Catalog Page</div>;
+  return (
+  <div>
+    <Header />
+    <div>Catalog Page</div>
+  </div>);
 }

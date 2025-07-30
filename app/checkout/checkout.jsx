@@ -1,5 +1,10 @@
+import { Header } from "../header";
+
 const Checkout = () => (
-  <div>Checkout Page</div>
+  <div>
+    <Header />
+    <div>Checkout Page</div>
+  </div>
 );
 
 export default Checkout;
