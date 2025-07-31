@@ -1,12 +1,12 @@
 import { NavLink } from "react-router";
 
 export const Header = () => {
-  return (<div>
-    <h1>Kyles Garage</h1>
-    <nav>
-      <NavLink to="/" end>Home</NavLink>
-      <NavLink to="/catalog" end>Catalog</NavLink>
+  return (<header className="flex justify-between p-4">
+    <h1 className="text-5xl font-bold text-orange-600">Kyles Garage</h1>
+    <nav className="flex justify-between">
+      <NavLink to="/" className="mr-2" end>Home</NavLink>
+      <NavLink to="/catalog" className="mr-2" end>Catalog</NavLink>
       <NavLink to="/checkout" end>Checkout</NavLink>
     </nav>
-  </div>);
+  </header>);
 };
