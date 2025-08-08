@@ -9,6 +9,8 @@ const pool = new Pool({
   port: 5432,
 });
 
+const client = await pool.connect();
+
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = dirname(__filename); // get the name of the directory
 
@@ -26,22 +28,27 @@ readFile(filepath, 'utf-8', (err, data) => {
 
 /**
  * SQL Query Given a filepath
+ * @description Given a filepath, read SQL query and perform transaction.
  */
-
 const executeSQL = (file) => {
   const filepath = join(__dirname, file);
   readFile(filepath, 'utf-8', async (err, data) => {
     if (err) throw err;
-    console.log(data);
-    const result = await pool.query(data);
-
-    result.rows.forEach(row => {
-      console.log(row.name);
-    });
+  
+    try {
+      await client.query('BEGIN');
+      const result = await pool.query(data);
+      result.rows.forEach(row => {
+        console.log(row.name);
+      });
+    } catch (e) {
+      await client.query();
+    } finally {
+      client.release();
+    }
   });
 }
 
-executeSQL('/sql/1.sql');
 /**
  * Select all migrations, filter out executed migrations, and executes leftover migrations.
  */
