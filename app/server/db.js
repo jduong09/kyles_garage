@@ -30,14 +30,15 @@ readFile(filepath, 'utf-8', (err, data) => {
  * SQL Query Given a filepath
  * @description Given a filepath, read SQL query and perform transaction.
  */
-const executeSQL = (file) => {
+const executeSQL = (file, values = {}) => {
   const filepath = join(__dirname, file);
   readFile(filepath, 'utf-8', async (err, data) => {
     if (err) throw err;
-  
+    console.log(data);
+    console.log(values.length);  
     try {
       await client.query('BEGIN');
-      const result = await pool.query(data);
+      const result = await values.length ? client.query(data, values) : client.query(data);
       result.rows.forEach(row => {
         console.log(row.name);
       });
@@ -49,7 +50,12 @@ const executeSQL = (file) => {
   });
 }
 
+executeSQL('/sql/migrations/2025_08_04_init_migrations.sql');
+
 /**
  * Select all migrations, filter out executed migrations, and executes leftover migrations.
  */
+const executeNewMigrations = () => {
+  // Select All Migrations
 
+}
