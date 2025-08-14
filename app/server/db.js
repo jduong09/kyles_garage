@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs';
+import { readFile, readdirSync } from 'node:fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { Pool } from 'pg';
@@ -14,14 +14,6 @@ const client = await pool.connect();
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = dirname(__filename); // get the name of the directory
 
-
-/*const filepath = join(__dirname, '/sql/sql.sql');
-
-readFile(filepath, 'utf-8', (err, data) => {
-  if (err) throw err;
-  console.log(data);
-});
-*/
 /**
  * DB Query
  */
@@ -30,32 +22,67 @@ readFile(filepath, 'utf-8', (err, data) => {
  * SQL Query Given a filepath
  * @description Given a filepath, read SQL query and perform transaction.
  */
-const executeSQL = (file, values = {}) => {
+const executeSQL = (file, values = []) => {
   const filepath = join(__dirname, file);
-  readFile(filepath, 'utf-8', async (err, data) => {
-    if (err) throw err;
-    console.log(data);
-    console.log(values.length);  
-    try {
-      await client.query('BEGIN');
-      const result = await values.length ? client.query(data, values) : client.query(data);
-      result.rows.forEach(row => {
-        console.log(row.name);
-      });
-    } catch (e) {
-      await client.query();
-    } finally {
-      client.release();
-    }
+  const array = new Promise ((resolve, reject) => {
+    let mappedArray = [];
+    readFile(filepath, 'utf-8', async (err, data) => {
+      if (err) throw err;
+      try {
+        await client.query('BEGIN');
+        const result = await client.query(data, values);
+        result.rows.forEach((row) => {
+          mappedArray.push(row);
+        });
+        await client.query('COMMIT');
+        resolve(mappedArray);
+      } catch (e) {
+        await client.query('ROLLBACK');
+        reject(e);
+      } finally {
+      }
+    });
   });
+  return array;
 }
-
-executeSQL('/sql/migrations/2025_08_04_init_migrations.sql');
 
 /**
  * Select all migrations, filter out executed migrations, and executes leftover migrations.
  */
-const executeNewMigrations = () => {
-  // Select All Migrations
+const executeNewMigrations = async () => {
+  let migrations = [];
+  try {
+    // Select All Migrations
+    const allMigrations = await executeSQL('/sql/migrationQueries/get_all.sql');
+    migrations = allMigrations.map((migration) => migration.file_name);
+  } catch {
+    console.log('First migration');
+  }
 
+  await pool.connect(async (error, client, release) => {
+    if (error) {
+      console.log(error);
+    }
+    try {
+      await client.query('BEGIN');
+      // Filtered Out Executed Migrations and Execute Non Migrated Files
+      const dirPath = join(__dirname, '/sql/migrations/');
+      const files = readdirSync(dirPath);
+      files.forEach(async (file) => {
+        if (!migrations.includes(file)) {
+          console.log(file);
+          await executeSQL(`/sql/migrations/${file}`);
+          await executeSQL('/sql/migrationQueries/put.sql', [file]);
+        }
+      });
+      await client.query('COMMIT');
+    } catch (e) {
+      console.log(e);
+      await client.query('ROLLBACK');
+    } finally {
+      await release();
+    }
+  });
 }
+
+executeNewMigrations();
