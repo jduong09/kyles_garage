@@ -19,28 +19,48 @@ const __dirname = dirname(__filename); // get the name of the directory
  */
 
 /**
+ * Transaction
+ * @description Given a query, perform transaction
+ */
+const transaction = async (sql) => {
+  const client = await pool.connect();
+  
+  try {
+    await client.query('BEGIN');
+
+    const result = await client.query(sql);
+
+    /*
+    if (!result.rows.length) {
+      throw new Error('Invalid Result');
+    }
+    */
+
+    await client.query('COMMIT');
+    return result;
+  } catch (err) {
+    try {
+      await client.query('ROLLBACK');
+    } catch(e) {
+      console.log('could not rollback: ', e);
+    }
+
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+/**
  * SQL Query Given a filepath
  * @description Given a filepath, read SQL query and perform transaction.
  */
 const executeSQL = (file, values = []) => {
   const filepath = join(__dirname, file);
   const array = new Promise ((resolve, reject) => {
-    let mappedArray = [];
     readFile(filepath, 'utf-8', async (err, data) => {
-      if (err) throw err;
-      try {
-        await client.query('BEGIN');
-        const result = await client.query(data, values);
-        result.rows.forEach((row) => {
-          mappedArray.push(row);
-        });
-        await client.query('COMMIT');
-        resolve(mappedArray);
-      } catch (e) {
-        await client.query('ROLLBACK');
-        reject(e);
-      } finally {
-      }
+      if (err) reject(err);
+      resolve(transaction(data));
     });
   });
   return array;
@@ -85,4 +105,4 @@ const executeNewMigrations = async () => {
   });
 }
 
-executeNewMigrations();
+executeSQL('/sql/migrations/2025_08_04_init_migrations.sql');
