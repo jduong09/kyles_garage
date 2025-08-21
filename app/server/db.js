@@ -2,7 +2,7 @@ import { readFile, readdirSync } from 'node:fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { Pool } from 'pg';
-import { dotenv } from 'dotenv';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -59,7 +59,7 @@ const convertSQL = (data, values) => {
   }
   return data;
 }
- 
+
 /**
  * SQL Query Given a filepath
  * @description Given a filepath, read SQL query and perform transaction.
