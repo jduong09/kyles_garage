@@ -64,7 +64,7 @@ const convertSQL = (data, values) => {
  * SQL Query Given a filepath
  * @description Given a filepath, read SQL query and perform transaction.
  */
-const executeSQL = (file, values = []) => {
+export const executeSQL = (file, values = []) => {
   const filepath = join(__dirname, file);
   const array = new Promise((resolve, reject) => {
     readFile(filepath, 'utf-8', async (err, data) => {
@@ -113,5 +113,3 @@ const executeNewMigrations = async () => {
     }
   });
 }
-
-executeNewMigrations();
