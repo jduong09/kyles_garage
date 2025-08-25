@@ -6,18 +6,18 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-/*
-* Use for Production
+// Use for Production
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL
 });
-*/
 
+/*
 const pool = new Pool({
   host: 'localhost',
   database: 'kyles_garage',
   port: 5432,
 });
+*/
 
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = dirname(__filename); // get the name of the directory
