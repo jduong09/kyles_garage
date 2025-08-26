@@ -1,17 +1,20 @@
+import 'dotenv/config';
 import { readFile, readdirSync } from 'node:fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { Pool } from 'pg';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 // Use for Production
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+    sslmode: 'require',
+  }
 });
 
 /*
+* For Testing
 const pool = new Pool({
   host: 'localhost',
   database: 'kyles_garage',
