@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 import { Pool } from 'pg';
 
 // Use for Production
-const pool = new Pool({
+export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false,
@@ -53,16 +53,6 @@ const transaction = async (sql, values) => {
   return result;
 }
 
-const convertSQL = (data, values) => {
-  if (values.length) {
-    for (let i = 0; i < values.length; i++) {
-      const str = `$${i + 1}`;
-      data = data.replace(str, values[i].toString());
-    }
-  }
-  return data;
-}
-
 /**
  * SQL Query Given a filepath
  * @description Given a filepath, read SQL query and perform transaction.
@@ -81,7 +71,7 @@ export const executeSQL = (file, values = []) => {
 /**
  * Select all migrations, filter out executed migrations, and executes leftover migrations.
  */
-const executeNewMigrations = async () => {
+export const executeNewMigrations = async () => {
   let migrations = [];
   try {
     // Select All Migrations
