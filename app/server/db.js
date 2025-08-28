@@ -4,7 +4,9 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { Pool } from 'pg';
 
-// Use for Production
+/**
+ * Use for Production
+*/
 export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -15,7 +17,7 @@ export const pool = new Pool({
 
 /*
 * For Testing
-const pool = new Pool({
+export const pool = new Pool({
   host: 'localhost',
   database: 'kyles_garage',
   port: 5432,
@@ -76,8 +78,13 @@ export const executeNewMigrations = async () => {
   try {
     // Select All Migrations
     const allMigrations = await executeSQL('/sql/migrationQueries/get_all.sql');
-    migrations = allMigrations.map((migration) => migration.file_name);
-  } catch {
+
+    if (!allMigrations.rows.length) {
+      throw new Error('No Migrations');
+    }
+    migrations = allMigrations.rows.map((migration) => migration.file_name);
+  } catch (e) {
+    console.log(e);
     console.log('First migration');
   }
 
@@ -87,7 +94,6 @@ export const executeNewMigrations = async () => {
     }
     try {
       await client.query('BEGIN');
-
       // Filtered Out Executed Migrations and Execute Non Migrated Files
       const dirPath = join(__dirname, '/sql/migrations/');
       const files = readdirSync(dirPath);
