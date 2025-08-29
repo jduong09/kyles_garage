@@ -6,7 +6,6 @@ import { Pool } from 'pg';
 
 /**
  * Use for Production
-*/
 export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -14,15 +13,16 @@ export const pool = new Pool({
     sslmode: 'require',
   }
 });
+*/
 
 /*
 * For Testing
+*/
 export const pool = new Pool({
   host: 'localhost',
   database: 'kyles_garage',
   port: 5432,
 });
-*/
 
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = dirname(__filename); // get the name of the directory
