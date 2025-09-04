@@ -4,7 +4,8 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { Pool } from 'pg';
 
-// Use for Production
+/*
+* Use for Production
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -12,15 +13,16 @@ const pool = new Pool({
     sslmode: 'require',
   }
 });
+*/
 
 /*
 * For Testing
+*/
 const pool = new Pool({
   host: 'localhost',
   database: 'kyles_garage',
   port: 5432,
 });
-*/
 
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = dirname(__filename); // get the name of the directory
