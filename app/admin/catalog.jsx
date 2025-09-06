@@ -1,5 +1,6 @@
 import { AdminHeader } from "../admin-header";
 
+// TODO: Remove this eventually -- this is just testing data
 const seedData = {
   largeTools: [
     {
@@ -260,23 +261,24 @@ const seedData = {
 const Catalog = () => (
   <div>
     <AdminHeader />
-    <h4>Large Tools</h4>
-    <div className="flex flex-wrap">
+    <h2 className="pl-4">Large Tools</h2>
+    <div className="pl-2 flex flex-wrap">
       {seedData.largeTools.map(({name, description, dailyRate}) => (
         <div className="flex flex-col border-2 border-red-400 size-64 m-2 p-2">
-          <p>Name: `${name}`</p>
-          <p>Description: `${description}`</p>
-          <p>Daily Rate: `$${dailyRate / 100}`</p>
+          <p>Name: {name}</p>
+          <p>Description: {description}</p>
+          <p>Daily Rate: ${dailyRate / 100}</p>
         </div>
       ))}
     </div>
-    <h4>Small Tools</h4>
-    <div className="flex flex-wrap">
+    <br/>
+    <h2 className="pl-4">Small Tools</h2>
+    <div className="pl-2 flex flex-wrap">
       {seedData.smallTools.map(({name, description, dailyRate}) => (
         <div className="flex flex-col border-2 border-red-400 size-64 m-2 p-2">
-          <p>Name: `${name}`</p>
-          <p>Description: `${description}`</p>
-          <p>Daily Rate: `$${dailyRate / 100}`</p>
+          <p>Name: {name}</p>
+          <p>Description: {description}</p>
+          <p>Daily Rate: ${dailyRate / 100}</p>
         </div>
       ))}
     </div>
