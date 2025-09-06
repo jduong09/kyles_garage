@@ -7,6 +7,7 @@ const Checkout = () => (
     <ul>
       <li>Items due back today</li>
       <li>Items reserved today</li>
+      <li>Some sort of profits? Or perhaps that can go on a separate reporting page</li>
     </ul>
   </div>
 );
