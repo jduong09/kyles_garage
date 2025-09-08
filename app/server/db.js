@@ -4,9 +4,9 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { Pool } from 'pg';
 
-/*
-* Use for Production
-const pool = new Pool({
+/**
+ * Use for Production
+export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false,
@@ -18,7 +18,7 @@ const pool = new Pool({
 /*
 * For Testing
 */
-const pool = new Pool({
+export const pool = new Pool({
   host: 'localhost',
   database: 'kyles_garage',
   port: 5432,
@@ -55,16 +55,6 @@ const transaction = async (sql, values) => {
   return result;
 }
 
-const convertSQL = (data, values) => {
-  if (values.length) {
-    for (let i = 0; i < values.length; i++) {
-      const str = `$${i + 1}`;
-      data = data.replace(str, values[i].toString());
-    }
-  }
-  return data;
-}
-
 /**
  * SQL Query Given a filepath
  * @description Given a filepath, read SQL query and perform transaction.
@@ -83,13 +73,18 @@ export const executeSQL = (file, values = []) => {
 /**
  * Select all migrations, filter out executed migrations, and executes leftover migrations.
  */
-const executeNewMigrations = async () => {
+export const executeNewMigrations = async () => {
   let migrations = [];
   try {
     // Select All Migrations
     const allMigrations = await executeSQL('/sql/migrationQueries/get_all.sql');
-    migrations = allMigrations.map((migration) => migration.file_name);
-  } catch {
+
+    if (!allMigrations.rows.length) {
+      throw new Error('No Migrations');
+    }
+    migrations = allMigrations.rows.map((migration) => migration.file_name);
+  } catch (e) {
+    console.log(e);
     console.log('First migration');
   }
 
@@ -99,7 +94,6 @@ const executeNewMigrations = async () => {
     }
     try {
       await client.query('BEGIN');
-
       // Filtered Out Executed Migrations and Execute Non Migrated Files
       const dirPath = join(__dirname, '/sql/migrations/');
       const files = readdirSync(dirPath);
