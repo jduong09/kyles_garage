@@ -1,0 +1,24 @@
+CREATE TABLE IF NOT EXISTS catalog (
+  id BIGSERIAL NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS tags (
+  id BIGSERIAL NOT NULL PRIMARY KEY,
+  tag TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS inventory (
+  id BIGSERIAL NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL,
+  sku TEXT NOT NULL,
+  archived TIMESTAMPTZ,
+  description TEXT,
+  rental_price INT,
+  images JSONB,
+  tags_id BIGINT[],
+  catalog_id BIGSERIAL NOT NULL REFERENCES catalog(id),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
