@@ -22,15 +22,17 @@ export default function Catalog() {
   }, []);
 
   const displayedItems = items.map((item, idx) => {
-    return (<li className="w-1/4" key={idx}>
-      <h2>{item.name}</h2>
+    return (<li className="bg-white" key={idx}>
+      <h2 className="text-lg font-bold">{item.name}</h2>
       <div>{item.price / 100}</div>
     </li>)
   });
   return (
   <div>
     <Header />
-    <div>Catalog Page</div>
-    <div className={"p-4"}><ul className="flex flex-wrap">{displayedItems}</ul></div>
+    <div className="bg-zinc-200 p-4">
+      <h2 className="text-3xl font-bold mb-4">Catalog Page</h2>
+      <div><ul className="flex flex-wrap gap-4">{displayedItems}</ul></div>
+    </div>
   </div>);
 }

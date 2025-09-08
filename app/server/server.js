@@ -28,7 +28,6 @@ app.get('/', (req, res) => {
 
 app.get('/inventory', async (req, res) => {
   const result = await executeSQL('/sql/inventory/get_all.sql');
-  console.log(result);
   const items = await result.rows.map(item => {
     return {
       name: item.name,
