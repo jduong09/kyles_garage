@@ -7,7 +7,6 @@ export default function Catalog() {
     const getItems = async () => {
       try {
         const response = await fetch("http://localhost:3000/inventory");
-        console.log(response);
     
         if (!response.ok) {
           throw new Error (`Response Status: ${response.status}`);
