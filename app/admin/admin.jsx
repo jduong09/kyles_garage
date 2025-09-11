@@ -191,12 +191,6 @@ const Checkout = () => {
       <div className="pl-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         {reservedToday.map(({name, catalog_name, reserve_start, reserve_end, payment_id}, idx) => reservationCard(idx, payment_id, name, catalog_name, reserve_start, reserve_end))}
       </div>
-      <br />
-      <br />
-      <br />
-      <div>TODO:</div>
-      <div>Some sort of snapshot of daily updates</div>
-      <div>Some sort of profits? Or perhaps that can go on a separate reporting page</div>
     </div>
   );
 };
