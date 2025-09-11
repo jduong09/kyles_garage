@@ -1,10 +1,13 @@
 import { Header } from "../header";
+import { useLocation } from "react-router";
 
-const Checkout = () => (
+const Checkout = () => {
+  const location = useLocation();
+  return (
   <div>
-    <Header />
+    <Header cart={location.state.cart} />
     <div>Checkout Page</div>
-  </div>
-);
+  </div>);
+};
 
 export default Checkout;

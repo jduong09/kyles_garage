@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 
 export default function Catalog() {
   const [items, setItems] = useState([]);
+  const [cart, setCart] = useState([]);
   useEffect(() => {
     const getItems = async () => {
       try {
@@ -21,15 +22,24 @@ export default function Catalog() {
     getItems();
   }, []);
 
+  const addCart = (item) => {
+    setCart([...cart, item]);
+  }
+
+  useEffect(() => {
+    console.log(cart);
+  }, [cart]);
+  
   const displayedItems = items.map((item, idx) => {
     return (<li className="bg-white" key={idx}>
       <h2 className="text-lg font-bold">{item.name}</h2>
       <div>{item.price / 100}</div>
+      <button onClick={() => addCart(item.name)}>Add To Cart</button>
     </li>)
   });
   return (
   <div>
-    <Header />
+    <Header cart={cart} />
     <div className="bg-zinc-200 p-4">
       <h2 className="text-3xl font-bold mb-4">Catalog Page</h2>
       <div><ul className="flex flex-wrap gap-4">{displayedItems}</ul></div>
