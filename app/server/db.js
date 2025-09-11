@@ -1,66 +1,70 @@
+import 'dotenv/config';
 import { readFile, readdirSync } from 'node:fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { Pool } from 'pg';
 
-const pool = new Pool({
+/**
+ * Use for Production
+export const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+    sslmode: 'require',
+  }
+});
+*/
+
+/*
+* For Testing
+*/
+export const pool = new Pool({
   host: 'localhost',
   database: 'kyles_garage',
   port: 5432,
 });
 
-const client = await pool.connect();
-
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = dirname(__filename); // get the name of the directory
-
-/**
- * DB Query
- */
 
 /**
  * Transaction
  * @description Given a query, perform transaction
  */
-const transaction = async (sql) => {
+const transaction = async (sql, values) => {
   const client = await pool.connect();
-  
+  let result;
   try {
     await client.query('BEGIN');
-
-    const result = await client.query(sql);
-
-    /*
-    if (!result.rows.length) {
-      throw new Error('Invalid Result');
+    if (values.length) {
+      result = await client.query(sql, values);
+    } else {
+      result = await client.query(sql);
     }
-    */
-
     await client.query('COMMIT');
-    return result;
   } catch (err) {
     try {
       await client.query('ROLLBACK');
     } catch(e) {
       console.log('could not rollback: ', e);
     }
-
     throw err;
   } finally {
     client.release();
   }
+  return result;
 }
 
 /**
  * SQL Query Given a filepath
  * @description Given a filepath, read SQL query and perform transaction.
  */
-const executeSQL = (file, values = []) => {
+export const executeSQL = (file, values = []) => {
   const filepath = join(__dirname, file);
-  const array = new Promise ((resolve, reject) => {
+  const array = new Promise((resolve, reject) => {
     readFile(filepath, 'utf-8', async (err, data) => {
       if (err) reject(err);
-      resolve(transaction(data));
+      resolve(transaction(data, values));
     });
   });
   return array;
@@ -69,13 +73,18 @@ const executeSQL = (file, values = []) => {
 /**
  * Select all migrations, filter out executed migrations, and executes leftover migrations.
  */
-const executeNewMigrations = async () => {
+export const executeNewMigrations = async () => {
   let migrations = [];
   try {
     // Select All Migrations
     const allMigrations = await executeSQL('/sql/migrationQueries/get_all.sql');
-    migrations = allMigrations.map((migration) => migration.file_name);
-  } catch {
+
+    if (!allMigrations.rows.length) {
+      throw new Error('No Migrations');
+    }
+    migrations = allMigrations.rows.map((migration) => migration.file_name);
+  } catch (e) {
+    console.log(e);
     console.log('First migration');
   }
 
@@ -90,7 +99,6 @@ const executeNewMigrations = async () => {
       const files = readdirSync(dirPath);
       files.forEach(async (file) => {
         if (!migrations.includes(file)) {
-          console.log(file);
           await executeSQL(`/sql/migrations/${file}`);
           await executeSQL('/sql/migrationQueries/put.sql', [file]);
         }
@@ -104,5 +112,3 @@ const executeNewMigrations = async () => {
     }
   });
 }
-
-executeSQL('/sql/migrations/2025_08_04_init_migrations.sql');

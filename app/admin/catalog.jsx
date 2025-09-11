@@ -258,29 +258,25 @@ const seedData = {
   ],
 };
 
+const productCard = (name, description, dailyRate) => (
+  <div className="flex flex-col justify-start items-start m-2 p-3 bg-gray-400/20 rounded-lg">
+    <h4 className="font-bold text-lg mb-2">{name}</h4>
+    <p className="mb-2">{description}</p>
+    <p className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 inset-ring inset-ring-green-600/20 dark:bg-green-400/10 dark:text-green-400 dark:inset-ring-green-500/20">Daily Rate: ${Number(dailyRate / 100).toFixed(2)}</p>
+  </div>
+);
+
 const Catalog = () => (
   <div>
     <AdminHeader />
-    <h2 className="pl-4">Large Tools</h2>
-    <div className="pl-2 flex flex-wrap">
-      {seedData.largeTools.map(({name, description, dailyRate}) => (
-        <div className="flex flex-col border-2 border-red-400 size-64 m-2 p-2">
-          <p>Name: {name}</p>
-          <p>Description: {description}</p>
-          <p>Daily Rate: ${dailyRate / 100}</p>
-        </div>
-      ))}
+    <h2 className="pl-4 text-xl font-bold">Larger Tools</h2>
+    <div className="pl-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+      {seedData.largeTools.map(({name, description, dailyRate}) => productCard(name, description, dailyRate))}
     </div>
     <br/>
-    <h2 className="pl-4">Small Tools</h2>
-    <div className="pl-2 flex flex-wrap">
-      {seedData.smallTools.map(({name, description, dailyRate}) => (
-        <div className="flex flex-col border-2 border-red-400 size-64 m-2 p-2">
-          <p>Name: {name}</p>
-          <p>Description: {description}</p>
-          <p>Daily Rate: ${dailyRate / 100}</p>
-        </div>
-      ))}
+    <h2 className="pl-4 text-xl font-bold">Smaller Tools</h2>
+    <div className="pl-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+      {seedData.smallTools.map(({name, description, dailyRate}) => productCard(name, description, dailyRate))}
     </div>
   </div>
 );
