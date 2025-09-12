@@ -31,18 +31,20 @@ export default function Catalog() {
   }, [cart]);
   
   const displayedItems = items.map((item, idx) => {
-    return (<li className="bg-white" key={idx}>
+    return (<li className="bg-zinc-200 p-4" key={idx}>
       <h2 className="text-lg font-bold">{item.name}</h2>
       <div>{item.price / 100}</div>
-      <button onClick={() => addCart(item.name)}>Add To Cart</button>
+      <button onClick={() => addCart({ name: item.name, price: item.price })}>Add To Cart</button>
     </li>)
   });
   return (
   <div>
     <Header cart={cart} />
-    <div className="bg-zinc-200 p-4">
+    <div className="p-4">
       <h2 className="text-3xl font-bold mb-4">Catalog Page</h2>
       <div><ul className="flex flex-wrap gap-4">{displayedItems}</ul></div>
+      <div>Reserve Button should cause dropdown to fill out Reserve Date and Time</div>
+      <div>Price is daily rate, date and time should calculate total price</div>
     </div>
   </div>);
 }
