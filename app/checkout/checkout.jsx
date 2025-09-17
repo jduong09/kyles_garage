@@ -6,16 +6,21 @@ const Checkout = () => {
   const { cart } = location.state;
 
   const listCart = cart.map((item, idx) => {
-    return (<li key={idx}>
-      <h2>{item.name}</h2>
-      <span>{item.price}</span>
+    return (<li className="mb-3" key={idx}>
+      <div className="flex justify-between align-center">
+        <h4>{item.name}</h4>
+        <span>${item.price}</span>
+      </div>
+      <div>Reserve from <span className="text-indigo-300">{item.startDate.toLocaleDateString()}</span> to <span className="text-indigo-300">{item.endDate.toLocaleDateString()}</span></div>
     </li>);
   })
   return (
-  <div>
+  <div className="p-4">
     <Header cart={cart} />
-    <div>Checkout Page</div>
-    <div><ul>{listCart}</ul></div>
+    <div className="bg-gray-500 p-2">
+      <h2 className="text-3xl font-bold pb-4 mb-4 border-b-4">Checkout</h2>
+      <ul className="flex flex-col">{listCart}</ul>
+    </div>
   </div>);
 };
 

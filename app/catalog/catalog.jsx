@@ -336,17 +336,18 @@ export default function Catalog() {
     getItems();
   }, []);
 
-  const addCart = (item) => {
-    setCart([...cart, item]);
-  }
-
   const toggleAvailability = (idx) => {
     refs[idx].current.className = (refs[idx].current.className === "hidden") ? "" : "hidden";
   }
 
-  useEffect(() => {
-    console.log(cart);
-  }, [cart]);
+  const addToCart = (e, idx, item) => {
+    e.preventDefault();
+    const [inputStart, inputEnd] = refs[idx].current.children[0].getElementsByTagName("input");
+    const endDate = new Date (inputEnd.value.slice(0, 4), inputEnd.value.slice(5, 7) - 1, inputEnd.value.slice(8, 10));
+    const startDate = new Date (inputStart.value.slice(0, 4), inputStart.value.slice(5, 7) - 1, inputStart.value.slice(8, 10));
+    const numOfReservedDays = (endDate - startDate === 0) ? 1 : ((endDate - startDate) / 86400000);
+    setCart([...cart, { name: item.name, price: Number((item.dailyRate / 100) * numOfReservedDays).toFixed(2), startDate, endDate }]);
+  }
   
   const displayedItems = seedData.largeTools.map((item, idx) => {
     return (<li className="flex flex-col justify-start items-start m-2 p-3 bg-gray-400/20 rounded-lg" key={idx}>
@@ -364,7 +365,7 @@ export default function Catalog() {
             End Date:
           </label>
           <input className="bg-white p-1" type="date" id="reserve-end-ts" name="reserve-end-ts" />
-          <button className="items-center rounded-full bg-yellow-100 px-2 py-1 font-medium" onClick={() => addCart({ name: item.name, price: item.dailyRate })}>Add To Cart</button>
+          <button type="submit" className="items-center rounded-full bg-yellow-100 px-2 py-1 font-medium" onClick={(e) => addToCart(e, idx, item)}>Add To Cart</button>
         </form>
       </div>
     </li>)
@@ -377,6 +378,7 @@ export default function Catalog() {
       <div><ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">{displayedItems}</ul></div>
       <div>Reserve Button should cause dropdown to fill out Reserve Date and Time</div>
       <div>Price is daily rate, date and time should calculate total price</div>
+      <div>Cart changed to OBJ, for delete function. Cart needs to be set in catalog component.</div>
     </div>
   </div>);
 }
