@@ -1,9 +1,16 @@
 import { Header } from "../header";
 import { useLocation } from "react-router";
+import { useState } from "react";
 
 const Checkout = () => {
   const location = useLocation();
-  const { cart } = location.state;
+  const [cart, setCart] = useState(location.state.cart || []);
+
+  const deleteItem = (item) => {
+    setCart(cart.filter(cartItem => {
+      return cartItem.catalog_id !== item.catalog_id;
+    }));
+  }
 
   const listCart = cart.map((item, idx) => {
     return (<li className="mb-3" key={idx}>
@@ -12,6 +19,7 @@ const Checkout = () => {
         <span>${item.price}</span>
       </div>
       <div>Reserve from <span className="text-indigo-300">{item.startDate.toLocaleDateString()}</span> to <span className="text-indigo-300">{item.endDate.toLocaleDateString()}</span></div>
+      <button onClick={() => deleteItem(item)}>Delete</button>
     </li>);
   })
   return (

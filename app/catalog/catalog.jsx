@@ -1,5 +1,6 @@
 import { Header } from '../header';
 import { createRef, useEffect, useState } from 'react';
+import { useLocation } from "react-router";
 
 const seedData = {
   largeTools: [
@@ -346,7 +347,13 @@ export default function Catalog() {
     const endDate = new Date (inputEnd.value.slice(0, 4), inputEnd.value.slice(5, 7) - 1, inputEnd.value.slice(8, 10));
     const startDate = new Date (inputStart.value.slice(0, 4), inputStart.value.slice(5, 7) - 1, inputStart.value.slice(8, 10));
     const numOfReservedDays = (endDate - startDate === 0) ? 1 : ((endDate - startDate) / 86400000);
-    setCart([...cart, { name: item.name, price: Number((item.dailyRate / 100) * numOfReservedDays).toFixed(2), startDate, endDate }]);
+    setCart([...cart, { catalog_id: item.catalog_id, name: item.name, price: Number((item.dailyRate / 100) * numOfReservedDays).toFixed(2), startDate, endDate }]);
+  }
+
+  const deleteItem = (item) => {
+    setCart(cart.filter(cartItem => {
+      return cartItem.catalog_id !== item.catalog_id;
+    }));
   }
   
   const displayedItems = seedData.largeTools.map((item, idx) => {
