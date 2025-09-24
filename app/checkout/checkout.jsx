@@ -1,14 +1,20 @@
 import { Header } from "../header";
 import { useLocation } from "react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Checkout = () => {
   const location = useLocation();
-  const [cart, setCart] = useState(location.state.cart || []);
+  const [cart, setCart] = useState([]);
+
+  useEffect(() => {
+    if (location.state.cart.length) {
+      setCart(location.state.cart);
+    }
+  }, []);
 
   const deleteItem = (item) => {
     setCart(cart.filter(cartItem => {
-      return cartItem.catalog_id !== item.catalog_id;
+      return cartItem.inventory_uuid !== item.inventory_uuid;
     }));
   }
 

@@ -78,10 +78,6 @@ export const executeNewMigrations = async () => {
   try {
     // Select All Migrations
     const allMigrations = await executeSQL('/sql/migrationQueries/get_all.sql');
-
-    if (!allMigrations.rows.length) {
-      throw new Error('No Migrations');
-    }
     migrations = allMigrations.rows.map((migration) => migration.file_name);
   } catch (e) {
     console.log(e);

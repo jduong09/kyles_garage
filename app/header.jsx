@@ -1,7 +1,6 @@
 import { NavLink } from "react-router";
 
 export const Header = ({ cart }) => {
-
   return (<header className="flex justify-between items-center mb-4">
     <h1 className="text-5xl font-bold text-orange-600">Kyles Garage</h1>
     {cart && <div>{cart.length} Items</div>}

@@ -9,8 +9,8 @@ executeNewMigrations();
 
 app.listen(port, () => {
   console.log(`App Listening on port ${port}`);
+  
 });
-
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
@@ -39,6 +39,7 @@ app.get('/inventory', async (req, res) => {
       price: item.rental_price,
       images: item.images,
       tags: item.tag_id,
+      inventory_uuid: item.inventory_uuid,
     }
   });
   await res.status(200).send(JSON.stringify({ items }));
