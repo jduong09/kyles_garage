@@ -1,11 +1,11 @@
 import express from 'express';
 import 'dotenv/config';
-import { pool, executeSQL, executeNewMigrations } from './db.js';
+import { pool, executeSQL, migrate } from './db.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-executeNewMigrations();
+migrate();
 
 app.listen(port, () => {
   console.log(`App Listening on port ${port}`);

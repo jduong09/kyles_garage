@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { readFile, readdirSync } from 'node:fs';
+import { readFile, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { Pool } from 'pg';
@@ -35,76 +35,63 @@ const transaction = async (sql, values) => {
   const client = await pool.connect();
   let result;
   try {
-    await client.query('BEGIN');
-    if (values.length) {
+    if (values) {
       result = await client.query(sql, values);
     } else {
       result = await client.query(sql);
     }
-    await client.query('COMMIT');
-  } catch (err) {
-    try {
-      await client.query('ROLLBACK');
-    } catch(e) {
-      console.log('could not rollback: ', e);
-    }
-    throw err;
+    return result;
+  } catch(err) {
+    console.log(`Error in transaction of ${sql}: `, err);
+    await client.query('ROLLBACK');
   } finally {
     client.release();
   }
-  return result;
 }
 
 /**
  * SQL Query Given a filepath
  * @description Given a filepath, read SQL query and perform transaction.
  */
-export const executeSQL = (file, values = []) => {
+export const sqlToStr = (file) => {
   const filepath = join(__dirname, file);
-  const array = new Promise((resolve, reject) => {
-    readFile(filepath, 'utf-8', async (err, data) => {
-      if (err) reject(err);
-      resolve(transaction(data, values));
-    });
+  const result = readFileSync(filepath, 'utf-8', (err, data) => {
+    if (err) {
+      console.error('Read File Error: ', err);
+    }
+    return data;
   });
-  return array;
+  return result;
 }
 
 /**
  * Select all migrations, filter out executed migrations, and executes leftover migrations.
  */
-export const executeNewMigrations = async () => {
+export const migrate = async () => {
   let migrations = [];
   try {
     // Select All Migrations
     const allMigrations = await executeSQL('/sql/migrationQueries/get_all.sql');
     migrations = allMigrations.rows.map((migration) => migration.file_name);
   } catch (e) {
-    console.log(e);
     console.log('First migration');
   }
+  
+  const dirPath = join(__dirname, '/sql/migrations/');
+  const files = readdirSync(dirPath);
+  const client = await pool.connect();
 
-  await pool.connect(async (error, client, release) => {
-    if (error) {
-      console.log(error);
-    }
-    try {
-      await client.query('BEGIN');
-      // Filtered Out Executed Migrations and Execute Non Migrated Files
-      const dirPath = join(__dirname, '/sql/migrations/');
-      const files = readdirSync(dirPath);
-      files.forEach(async (file) => {
-        if (!migrations.includes(file)) {
-          await executeSQL(`/sql/migrations/${file}`);
-          await executeSQL('/sql/migrationQueries/put.sql', [file]);
-        }
-      });
-      await client.query('COMMIT');
-    } catch (e) {
-      console.log(e);
-      await client.query('ROLLBACK');
-    } finally {
-      await release();
-    }
+  try {
+  await client.query('BEGIN');
+  files.forEach(async (file) => {
+    await client.query(sqlToStr(`/sql/migrations/${file}`));
+    await client.query(sqlToStr('/sql/migrationQueries/put.sql'), [file]);
   });
+  await client.query('COMMIT');
+  } catch(err) {
+    await client.query('ROLLBACK');
+    throw err;
+  } finally {
+    client.release();
+  }
 }
