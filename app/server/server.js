@@ -1,10 +1,12 @@
 import express from 'express';
 import 'dotenv/config';
-import { pool, executeSQL, migrate } from './db.js';
+import { pool, execute, migrate } from './db.js';
+import { inventoryScript } from './scripts/001_inventory.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+inventoryScript();
 migrate();
 
 app.listen(port, () => {
@@ -29,7 +31,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/inventory', async (req, res) => {
-  const result = await executeSQL('/sql/inventory/get_all.sql');
+  const result = await execute('/sql/inventory/get_all.sql');
   const items = await result.rows.map(item => {
     return {
       name: item.name,

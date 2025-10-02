@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { readFile, readFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { Pool } from 'pg';
@@ -28,8 +28,9 @@ const __filename = fileURLToPath(import.meta.url); // get the resolved path to t
 const __dirname = dirname(__filename); // get the name of the directory
 
 /**
- * Transaction
- * @description Given a query, perform transaction
+ * @param {String} sql
+ * @param {Array} values
+ * @description Given a sql query and values array, perform transaction
  */
 const transaction = async (sql, values) => {
   const client = await pool.connect();
@@ -50,7 +51,7 @@ const transaction = async (sql, values) => {
 }
 
 /**
- * SQL Query Given a filepath
+ * @param {String} file
  * @description Given a filepath, read SQL query and perform transaction.
  */
 export const sqlToStr = (file) => {
@@ -65,13 +66,29 @@ export const sqlToStr = (file) => {
 }
 
 /**
- * Select all migrations, filter out executed migrations, and executes leftover migrations.
+ * @param {String} file 
+ * @param {Array} values 
+ * @returns Result object of database call
+ */
+export const execute = (file, values) => {
+  const sql = sqlToStr(file);
+  return new Promise((resolve, reject) => {
+    try {
+      resolve(transaction(sql, values));
+    } catch(err) {
+      reject(err);
+    }
+  })
+}
+
+/**
+ * @description Select all migrations, filters out executed migrations, and executes leftover migrations.
  */
 export const migrate = async () => {
   let migrations = [];
+  const client = await pool.connect();
   try {
-    // Select All Migrations
-    const allMigrations = await executeSQL('/sql/migrationQueries/get_all.sql');
+    const allMigrations = await client.query(sqlToStr('/sql/migrationQueries/get_all.sql'));
     migrations = allMigrations.rows.map((migration) => migration.file_name);
   } catch (e) {
     console.log('First migration');
@@ -79,15 +96,16 @@ export const migrate = async () => {
   
   const dirPath = join(__dirname, '/sql/migrations/');
   const files = readdirSync(dirPath);
-  const client = await pool.connect();
-
+  
   try {
-  await client.query('BEGIN');
-  files.forEach(async (file) => {
-    await client.query(sqlToStr(`/sql/migrations/${file}`));
-    await client.query(sqlToStr('/sql/migrationQueries/put.sql'), [file]);
-  });
-  await client.query('COMMIT');
+    await client.query('BEGIN');
+    files.forEach(async (file) => {
+      if (!migrations.includes(file)) {
+        await client.query(sqlToStr(`/sql/migrations/${file}`));
+        await client.query(sqlToStr('/sql/migrationQueries/put.sql'), [file]);
+      }
+    });
+    await client.query('COMMIT');
   } catch(err) {
     await client.query('ROLLBACK');
     throw err;
