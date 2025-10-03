@@ -1,7 +1,7 @@
-import { Header } from "../header";
-import { Landing } from "../landing/landing";
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router";
+import { Header } from '../header';
+import { Landing } from '../landing/landing';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
 
 export function meta() {
   return [

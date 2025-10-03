@@ -1,6 +1,6 @@
 import express from 'express';
 import 'dotenv/config';
-import { pool, execute, migrate } from './db.js';
+import { execute, migrate } from './db.js';
 import { inventoryScript } from './scripts/001_inventory.js';
 
 const app = express();
