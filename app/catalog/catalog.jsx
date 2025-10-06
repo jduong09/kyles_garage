@@ -8,10 +8,10 @@ export default function Catalog() {
   const location = useLocation();
   const [items, setItems] = useState([]);
   const [cart, setCart] = useState([]);
-  const [inputStart, setInputStart] = useState('');
-  const [inputEnd, setInputEnd] = useState('');
   const [refLength, setRefLength] = useState(0);
   const [refs, setRefs] = useState([]);
+  const [inputStart, setInputStart] = useState('');
+  const [inputEnd, setInputEnd] = useState('');
 
   useEffect(() => {
     setRefs((refs) => Array(refLength).fill().map((_, i) => refs[i] || createRef()));
@@ -46,15 +46,24 @@ export default function Catalog() {
 
   const addToCart = (e, idx, item) => {
     e.preventDefault();
-    const [inputStart, inputEnd] = refs[idx].current.children[0].getElementsByTagName('input');
+
+    const boolStart = validateStartDate(inputStart, idx);
+    const boolEnd = validateEndDate(inputEnd, idx);
+
+    if (!boolStart || !boolEnd) {
+      return;
+    }
+
     // Create Date Objects for inputStart/inputEnd values
     // Subtract start from end to get difference of each other in seconds.
     // Convert to days
-    const endDate = new Date (inputEnd.value.slice(0, 4), inputEnd.value.slice(5, 7) - 1, inputEnd.value.slice(8, 10));
-    const startDate = new Date (inputStart.value.slice(0, 4), inputStart.value.slice(5, 7) - 1, inputStart.value.slice(8, 10));
+    const endDate = new Date (inputEnd.slice(0, 4), inputEnd.slice(5, 7) - 1, inputEnd.slice(8, 10));
+    const startDate = new Date (inputStart.slice(0, 4), inputStart.slice(5, 7) - 1, inputStart.slice(8, 10));
 
     const numOfReservedDays = (endDate - startDate === 0) ? 1 : ((endDate - startDate) / SECONDSINDAY);
     setCart([...cart, { inventory_uuid: item.inventory_uuid, name: item.name, price: Number((item.price / 100) * numOfReservedDays).toFixed(2), startDate, endDate }]);
+    setInputStart('');
+    setInputEnd('');
     toggleAvailability(idx);
   }
 
@@ -64,49 +73,52 @@ export default function Catalog() {
     }));
   }
 
-  // Set validation to be on submit
-  const validateStartDate = (e, idx) => {
-    const date = new Date (e.target.value.slice(0, 4), e.target.value.slice(5, 7) - 1, e.target.value.slice(8, 10));
+  const validateStartDate = (date, idx) => {
+    const dateStart = new Date (date.slice(0, 4), date.slice(5, 7) - 1, date.slice(8, 10));
     const errorSpan = refs[idx].current.getElementsByTagName('span')[0];
     const today = new Date();
 
-    if (date - today < 0) {
-      console.log('Error: Date in Past');
-      errorSpan.innerText = 'Error: Date in past';
-      errorSpan.className = 'text-red-500 text-xs mb-2 mt-[-8px]';
-      return;
+    // Validation Check: Empty --> Date Set is in the Past --> Valid Date
+    if (date === '') {
+      displayErrorMessage(errorSpan, 'Error: Date not set');
+      return false;
+    } else if (dateStart - today < 0) {
+      displayErrorMessage(errorSpan, 'Error: Date in past')
+      return false;
     } else {
       errorSpan.className = 'hidden';
+      return true;
     }
-
-    setInputStart(e.target.value);
-    console.log(e.target.value);
   }
 
-  const validateEndDate = (e, idx) => {
-    const date = new Date (e.target.value.slice(0, 4), e.target.value.slice(5, 7) - 1, e.target.value.slice(8, 10));
+  const validateEndDate = (date, idx) => {
+    const dateEnd = new Date (date.slice(0, 4), date.slice(5, 7) - 1, date.slice(8, 10));
     const dateStart = new Date(inputStart.slice(0, 4), inputStart.slice(5, 7) - 1, inputStart.slice(8, 10));
     const errorSpan = refs[idx].current.getElementsByTagName('span')[1];
     const today = new Date();
 
-    if (date - today < 0) {
-      console.log('Error: Date in Past');
-      errorSpan.innerText = `Error: ${date.toLocaleDateString()} in past`;
-      errorSpan.className = 'text-red-500 text-xs mb-2 mt-[-8px]';
-      return;
-    } else if (inputStart && (date - dateStart < 0)) {
-      errorSpan.innerText = `Error: ${date.toLocaleDateString()} earlier than ${dateStart.toLocaleDateString()}`;
-      errorSpan.className = 'text-red-500 text-xs mb-2 mt-[-8px]';
-      return;
-    } else if (inputStart && ((date - dateStart) / SECONDSINDAY > 7)) {
-      errorSpan.innerText = `Error: Cannot set to ${date.toLocaleDateString()}. Max reservation time is 7 days.`;
-      errorSpan.className = 'text-red-500 text-xs mb-2 mt-[-8px]';
-      return;
+    // Validation Check: Empty --> Date Set is in the Past --> Date is earlier date than start date --> Date outside of resevation required dates (7 days) --> Valid
+    if (date === '') {
+      displayErrorMessage(errorSpan, 'Error: Date not set');
+      return false;
+    } else if (dateEnd - today < 0) {
+      displayErrorMessage(errorSpan, 'Error: Date in past');
+      return false;
+    } else if (inputStart && (dateEnd - dateStart < 0)) {
+      displayErrorMessage(errorSpan, `Error: ${dateEnd.toLocaleDateString()} earlier than ${dateStart.toLocaleDateString()}`);
+      return false;
+    } else if (inputStart && ((dateEnd - dateStart) / SECONDSINDAY > 7)) {
+      displayErrorMessage(errorSpan, `Error: Cannot set to ${dateEnd.toLocaleDateString()}. Max reservation time is 7 days.`);
+      return false;
     } else {
       errorSpan.className = 'hidden';
+      return true;
     }
+  }
 
-    setInputEnd(e.target.value);
+  const displayErrorMessage = (element, message) => {
+    element.innerText = message;
+    element.className = 'text-red-500 text-xs mb-2 mt-[-8px]';
   }
   
   const displayedItems = items.map((item, idx) => {
@@ -123,12 +135,12 @@ export default function Catalog() {
           <label className="font-bold mb-1" htmlFor="reserve-start-ts">
             Start Date:
           </label>
-          <input className="bg-white p-1 mb-2 dark:bg-gray-600" type="date" id="reserve-start-ts" name="reserve-start-ts" onChange={(e) => validateStartDate(e, idx)} value={inputStart} required/>
+          <input className="bg-white p-1 mb-2 dark:bg-gray-600" type="date" id="reserve-start-ts" name="reserve-start-ts" onChange={(e) => setInputStart(e.target.value)} value={inputStart} required/>
           <span className="hidden"></span>
           <label className="font-bold" htmlFor="reserve-end-ts">
             End Date:
           </label>
-          <input className="bg-white p-1 mb-2 dark:bg-gray-600" type="date" id="reserve-end-ts" name="reserve-end-ts" onChange={(e) => validateEndDate(e, idx)} value={inputEnd} required/>
+          <input className="bg-white p-1 mb-2 dark:bg-gray-600" type="date" id="reserve-end-ts" name="reserve-end-ts" onChange={(e) => setInputEnd(e.target.value)} value={inputEnd} required/>
           <span className="hidden"></span>
           <button type="submit" className="items-center rounded-full bg-blue-600 hover:bg-blue-700 px-2 py-1 font-medium dark:bg-blue-500" onClick={(e) => addToCart(e, idx, item)}>Add To Cart</button>
         </form>
@@ -138,7 +150,7 @@ export default function Catalog() {
   return (
   <div>
     <Header cart={cart}/>
-    <div>
+    <div className="p-4">
       <h2 className="text-3xl font-bold mb-4">Inventory</h2>
       <div><ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">{displayedItems}</ul></div>
     </div>
