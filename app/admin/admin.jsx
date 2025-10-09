@@ -1,4 +1,4 @@
-import { AdminHeader } from "../admin-header";
+import { AdminHeader } from '../admin-header';
 
 // This is the same data in the reservations.jsx file
 // Eventually wherever we pull our reservation data we'll want to use it in some

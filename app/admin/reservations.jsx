@@ -1,4 +1,4 @@
-import { AdminHeader } from "../admin-header";
+import { AdminHeader } from '../admin-header';
 
 const reservations = [
   {

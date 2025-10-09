@@ -1,4 +1,4 @@
-import { AdminHeader } from "../admin-header";
+import { AdminHeader } from '../admin-header';
 
 // TODO: Remove this eventually -- this is just testing data
 const seedData = {
