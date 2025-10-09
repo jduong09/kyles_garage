@@ -1,9 +1,21 @@
 import express from 'express';
+import { auth } from 'express-openid-connect';
 import 'dotenv/config';
 import { pool, executeSQL, executeNewMigrations } from './db.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+const { CLIENT_ID, CLIENT_DOMAIN, CLIENT_SECRET } = process.env;
+
+const config = {
+  authRequired: false,
+  auth0Logout: true,
+  baseURL: 'http://localhost:5173',
+  clientID: CLIENT_ID,
+  issuerBaseURL: `https://${CLIENT_DOMAIN}`,
+  secret: CLIENT_SECRET,
+};
 
 executeNewMigrations();
 
@@ -11,6 +23,9 @@ app.listen(port, () => {
   console.log(`App Listening on port ${port}`);
 });
 
+
+// auth router attaches /login, /logout, and /callback routes to the baseURL
+app.use(auth(config));
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
@@ -24,8 +39,9 @@ app.use((req, res, next) => {
   next();
 });
 
+// req.isAuthenticated is provided from the auth router
 app.get('/', (req, res) => {
-  res.send('Home');
+  res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out')
 });
 
 app.get('/inventory', async (req, res) => {
@@ -47,3 +63,7 @@ app.get('/inventory', async (req, res) => {
 app.get('/checkout', (req, res) => {
   res.send('Checkout');
 });
+
+app.get('/login', (req, res) => {
+  console.log('hello');
+})
