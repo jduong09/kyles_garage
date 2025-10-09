@@ -2,7 +2,7 @@ import { Header } from '../header';
 import { createRef, useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 
-const SECONDSINDAY = 86400000;
+const SECONDS_IN_DAY = 86400000;
 
 export default function Catalog() {
   const location = useLocation();
@@ -60,7 +60,7 @@ export default function Catalog() {
     const endDate = new Date (inputEnd.slice(0, 4), inputEnd.slice(5, 7) - 1, inputEnd.slice(8, 10));
     const startDate = new Date (inputStart.slice(0, 4), inputStart.slice(5, 7) - 1, inputStart.slice(8, 10));
 
-    const numOfReservedDays = (endDate - startDate === 0) ? 1 : ((endDate - startDate) / SECONDSINDAY);
+    const numOfReservedDays = (endDate - startDate === 0) ? 1 : ((endDate - startDate) / SECONDS_IN_DAY);
     setCart([...cart, { inventory_uuid: item.inventory_uuid, name: item.name, price: Number((item.price / 100) * numOfReservedDays).toFixed(2), startDate, endDate }]);
     setInputStart('');
     setInputEnd('');
@@ -107,7 +107,7 @@ export default function Catalog() {
     } else if (inputStart && (dateEnd - dateStart < 0)) {
       displayErrorMessage(errorSpan, `Error: ${dateEnd.toLocaleDateString()} earlier than ${dateStart.toLocaleDateString()}`);
       return false;
-    } else if (inputStart && ((dateEnd - dateStart) / SECONDSINDAY > 7)) {
+    } else if (inputStart && ((dateEnd - dateStart) / SECONDS_IN_DAY > 7)) {
       displayErrorMessage(errorSpan, `Error: Cannot set to ${dateEnd.toLocaleDateString()}. Max reservation time is 7 days.`);
       return false;
     } else {
