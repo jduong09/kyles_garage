@@ -1,16 +1,18 @@
 import express from 'express';
 import 'dotenv/config';
-import { pool, executeSQL, executeNewMigrations } from './db.js';
+import { execute, migrate } from './db.js';
+import { inventoryScript } from './scripts/001_inventory.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-executeNewMigrations();
+inventoryScript();
+migrate();
 
 app.listen(port, () => {
   console.log(`App Listening on port ${port}`);
+  
 });
-
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
@@ -29,7 +31,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/inventory', async (req, res) => {
-  const result = await executeSQL('/sql/inventory/get_all.sql');
+  const result = await execute('/sql/inventory/get_all.sql');
   const items = await result.rows.map(item => {
     return {
       name: item.name,
@@ -39,6 +41,7 @@ app.get('/inventory', async (req, res) => {
       price: item.rental_price,
       images: item.images,
       tags: item.tag_id,
+      inventory_uuid: item.inventory_uuid,
     }
   });
   await res.status(200).send(JSON.stringify({ items }));
