@@ -13,6 +13,7 @@ export const Header = ({ cart }) => {
             {cart.length !== 0 && <span className="w-2 h-2 p-2 rounded-full bg-black dark:bg-orange-600 text-white text-xs flex items-center justify-center absolute bottom-4 left-4">{cart.length}</span>}
           </div>
         </NavLink>
+        <a href={"http://localhost:3000/login"}>Login</a>
       </nav>
     </header>
   );

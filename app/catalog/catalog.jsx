@@ -20,7 +20,7 @@ export default function Catalog() {
   useEffect(() => {
     const getItems = async () => {
       try {
-        const response = await fetch("http://localhost:3000/inventory");
+        const response = await fetch('http://localhost:3000/inventory');
     
         if (!response.ok) {
           throw new Error (`Response Status: ${response.status}`);

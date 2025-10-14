@@ -1,5 +1,6 @@
 import express from 'express';
 import { auth } from 'express-openid-connect';
+import { randomBytes } from 'crypto';
 import 'dotenv/config';
 import { execute, migrate } from './db.js';
 import { inventoryScript } from './scripts/001_inventory.js';
@@ -12,10 +13,15 @@ const { CLIENT_ID, CLIENT_DOMAIN, CLIENT_SECRET } = process.env;
 const config = {
   authRequired: false,
   auth0Logout: true,
-  baseURL: 'http://localhost:5173',
+  baseURL: 'http://localhost:3000',
   clientID: CLIENT_ID,
   issuerBaseURL: `https://${CLIENT_DOMAIN}`,
   secret: CLIENT_SECRET,
+  authorizationParams: {
+    response_type: 'id_token',
+    response_mode: 'form_post',
+    scope: 'openid profile email',
+  },
 };
 
 inventoryScript();
@@ -43,7 +49,7 @@ app.use((req, res, next) => {
 
 // req.isAuthenticated is provided from the auth router
 app.get('/', (req, res) => {
-  res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out')
+  res.redirect('http://localhost:5173');
 });
 
 app.get('/inventory', async (req, res) => {
@@ -68,5 +74,11 @@ app.get('/checkout', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
-  console.log('hello');
-})
+  const NONCE = randomBytes(16).toString('base64');
+  console.log('Made it to Login Function');
+
+  fetch(`https://${CLIENT_DOMAIN}/authorize?
+    client_id=${CLIENT_ID}&
+    state=hello&
+    nonce=${NONCE}`);
+});
