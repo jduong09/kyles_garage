@@ -1,6 +1,7 @@
 import express from 'express';
 import { auth } from 'express-openid-connect';
 import { randomBytes } from 'crypto';
+import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import { execute, migrate } from './db.js';
 import { inventoryScript } from './scripts/001_inventory.js';
@@ -22,6 +23,25 @@ const config = {
     response_mode: 'form_post',
     scope: 'openid profile email',
   },
+  afterCallback: async (req, res, session, decodedState) => {
+    // Get Email from Login
+    const { email } = jwt.decode(session.id_token);
+    console.log('User Email: ', email);
+
+    // Check table 'users' for user by email
+    // TODO: Change this to Function to return 'user' instead of 'rows'
+    const { rows } = await execute('/sql/users/get_by_email.sql', [email]);
+
+    // Need to Change schema for users to not force first/last name, add nickname. From Auth0 username/password, create user in db with status, nickname, email
+    if (rows.length) {
+      await execute('/sql/users/put.sql', [email]);
+    }
+
+    return {
+      ...session,
+       // access using `req.appSession.userProfile`
+    };
+  }
 };
 
 inventoryScript();
@@ -73,12 +93,6 @@ app.get('/checkout', (req, res) => {
   res.send('Checkout');
 });
 
-app.get('/login', (req, res) => {
-  const NONCE = randomBytes(16).toString('base64');
-  console.log('Made it to Login Function');
-
-  fetch(`https://${CLIENT_DOMAIN}/authorize?
-    client_id=${CLIENT_ID}&
-    state=hello&
-    nonce=${NONCE}`);
+app.get('/callback', (req, res) => {
+  console.log('hit callback router');
 });
