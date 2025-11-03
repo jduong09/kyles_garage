@@ -35,7 +35,7 @@ export default function Catalog() {
     }
     getItems();
 
-    if (location.state.cart.length) {
+    if (location.state && location.state.cart.length) {
       setCart(location.state.cart);
     }
   }, []);

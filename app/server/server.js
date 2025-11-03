@@ -1,7 +1,4 @@
 import express from 'express';
-import { auth } from 'express-openid-connect';
-import { randomBytes } from 'crypto';
-import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import { execute, migrate } from './db.js';
 import { inventoryScript } from './scripts/001_inventory.js';
@@ -11,48 +8,12 @@ const port = process.env.PORT || 3000;
 
 const { CLIENT_ID, CLIENT_DOMAIN, SECRET } = process.env;
 
-const config = {
-  authRequired: false,
-  auth0Logout: true,
-  baseURL: 'http://localhost:3000',
-  clientID: CLIENT_ID,
-  issuerBaseURL: `https://${CLIENT_DOMAIN}`,
-  secret: SECRET,
-  authorizationParams: {
-    response_type: 'id_token',
-    response_mode: 'form_post',
-    scope: 'openid profile email',
-  },
-  afterCallback: async (req, res, session, decodedState) => {
-    // Get Email from Login
-    const { email } = jwt.decode(session.id_token);
-
-    // Check table 'users' for user by email
-    // TODO: Change this to Function to return 'user' instead of 'rows'
-    const { rows: [user] } = await execute('/sql/users/get_by_email.sql', [email]);
-  
-    // Need to Change schema for users to not force first/last name, add nickname. From Auth0 username/password, create user in db with status, nickname, email
-    if (!user) {
-      const { rows: [newUser]}  = await execute('/sql/users/put.sql', [email]);
-      return {
-        message: 'hello'
-      };
-    } else { 
-      return {
-        message: 'hello'
-      }
-    }
-  },
-};
 // inventoryScript();
 migrate();
 
 app.listen(port, () => {
   console.log(`App Listening on port ${port}`);
 });
-
-// auth router attaches /login, /logout, and /callback routes to the baseURL
-app.use(auth(config));
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
@@ -66,9 +27,10 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(express.json());
+
 // req.isAuthenticated is provided from the auth router
 app.get('/', (req, res) => {
-  console.log(req.oidc);
   res.redirect('http://localhost:5173');
 });
 
@@ -93,8 +55,15 @@ app.get('/checkout', (req, res) => {
   res.send('Checkout');
 });
 
-app.get('/callback', (req, res) => {
-  console.log(req.body);
-  console.log(req.session);
-  res.oidc.callback({ redirectUri: 'http://localhost:5173' });
-})
+app.post('/user', async (req, res) => {
+  const { email } = req.body;
+  let user;
+  const result = await execute('/sql/users/get_by_email.sql', [email]);
+
+  if (!result.rows.length) {
+    user = await execute('/sql/users/put.sql', [email]);
+  } else {
+    user = result.rows[0];
+  }
+  console.log(user);
+});

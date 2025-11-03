@@ -5,8 +5,9 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useNavigate
 } from 'react-router';
-
+import { Auth0Provider } from '@auth0/auth0-react';
 import "./app.css";
 
 export const links = () => [
@@ -22,7 +23,15 @@ export const links = () => [
   },
 ];
 
+const { VITE_APP_DOMAIN, VITE_APP_CLIENT_ID } = import.meta.env;
+
 export function Layout({ children }) {
+  const navigate = useNavigate();
+
+  const onRedirectCallback = (appState) => {
+    navigate(appState?.returnTo || "http://localhost:5173");
+  }
+
   return (
     <html lang="en">
       <head>
@@ -32,7 +41,16 @@ export function Layout({ children }) {
         <Links />
       </head>
       <body>
+        <Auth0Provider
+          domain={VITE_APP_DOMAIN}
+          clientId={VITE_APP_CLIENT_ID}
+          authorizationParams={{
+            redirect_uri: "http://localhost:5173"
+          }}
+          onRedirectCallback={onRedirectCallback}
+        >
         {children}
+        </Auth0Provider>
         <ScrollRestoration />
         <Scripts />
       </body>

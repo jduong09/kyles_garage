@@ -1,6 +1,9 @@
-import { NavLink } from 'react-router';
+import { NavLink, useLocation } from 'react-router';
+import { useAuth0 } from '@auth0/auth0-react';
 
 export const Header = ({ cart }) => {
+  const { loginWithRedirect } = useAuth0();
+  const location = useLocation();
   return (
     <header className="sticky top-0 flex justify-between items-center mb-4 shadow-lg p-4 bg-white dark:bg-black">
       <h1 className="text-5xl font-bold text-orange-600">Kyles Garage</h1>
@@ -13,7 +16,7 @@ export const Header = ({ cart }) => {
             {cart.length !== 0 && <span className="w-2 h-2 p-2 rounded-full bg-black dark:bg-orange-600 text-white text-xs flex items-center justify-center absolute bottom-4 left-4">{cart.length}</span>}
           </div>
         </NavLink>
-        <a href={"http://localhost:3000/login"}>Login</a>
+        <button type="button" onClick={() => loginWithRedirect({ appState: { returnTo: location.pathname } })}>Log in</button>
       </nav>
     </header>
   );
