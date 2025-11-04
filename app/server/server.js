@@ -65,5 +65,4 @@ app.post('/user', async (req, res) => {
   } else {
     user = result.rows[0];
   }
-  console.log(user);
 });
