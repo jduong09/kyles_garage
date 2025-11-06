@@ -1,4 +1,5 @@
 import { AdminHeader } from '../admin-header';
+import { withAuthenticationRequired } from '@auth0/auth0-react';
 
 // TODO: Remove this eventually -- this is just testing data
 const seedData = {
@@ -331,4 +332,6 @@ const Catalog = () => (
   </div>
 );
 
-export default Catalog;
+export default withAuthenticationRequired(Catalog, {
+  onRedirecting: () => (<div>Redirecting you to the login page...</div>)
+});

@@ -1,4 +1,5 @@
 import { AdminHeader } from '../admin-header';
+import { withAuthenticationRequired } from '@auth0/auth0-react';
 
 // This is the same data in the reservations.jsx file
 // Eventually wherever we pull our reservation data we'll want to use it in some
@@ -195,4 +196,6 @@ const Checkout = () => {
   );
 };
 
-export default Checkout;
+export default withAuthenticationRequired(Checkout, {
+  onRedirecting: () => (<div>Redirecting you to the login page...</div>)
+});

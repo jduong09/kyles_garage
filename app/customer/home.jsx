@@ -1,5 +1,5 @@
 import { Header } from '../header';
-import { Landing } from '../landing/landing';
+import { Landing } from './landing';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -24,8 +24,7 @@ export default function Home() {
 
   useEffect(()  => {
     const syncUser = async () => {
-      if (!isAuthenticated) return;
-      console.log('Running Request');
+      if (!isAuthenticated) return;5
       await fetch("http://localhost:3000/user", {
         method: "POST",
         headers: {

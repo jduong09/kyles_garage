@@ -16,6 +16,7 @@ export const Header = ({ cart }) => {
             {cart.length !== 0 && <span className="w-2 h-2 p-2 rounded-full bg-black dark:bg-orange-600 text-white text-xs flex items-center justify-center absolute bottom-4 left-4">{cart.length}</span>}
           </div>
         </NavLink>
+        {isAuthenticated && <NavLink to="/profile" className="mr-8" state={{ cart: cart || [] }} end>Profile</NavLink>}
         {!isAuthenticated 
         ? <button type="button" onClick={() => loginWithRedirect({ appState: { returnTo: location.pathname } })}>Log In</button>
         : <button type="button" onClick={() => logout({ logoutParams: { returnTo: location.origin } })}>Log Out</button>}
