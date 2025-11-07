@@ -9,12 +9,13 @@ export default function Catalog() {
   const [items, setItems] = useState([]);
   const [cart, setCart] = useState([]);
   const [refLength, setRefLength] = useState(0);
-  const [refs, setRefs] = useState([]);
+  const [errorRefs, setErrorRefs] = useState([]);
   const [inputStart, setInputStart] = useState('');
   const [inputEnd, setInputEnd] = useState('');
+  const [openIndex, setOpenIndex] = useState(null);
 
   useEffect(() => {
-    setRefs((refs) => Array(refLength).fill().map((_, i) => refs[i] || createRef()));
+    setErrorRefs((refs) => Array(refLength).fill().map((_, i) => refs[i] || createRef()));
   }, [refLength]);
 
   useEffect(() => {
@@ -40,8 +41,8 @@ export default function Catalog() {
     }
   }, []);
 
-  const toggleAvailability = (idx) => {
-    refs[idx].current.className = (refs[idx].current.className === 'hidden') ? '' : 'hidden';
+  const toggleAvailability = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
   }
 
   const addToCart = (e, idx, item) => {
@@ -75,7 +76,7 @@ export default function Catalog() {
 
   const validateStartDate = (date, idx) => {
     const dateStart = new Date (date.slice(0, 4), date.slice(5, 7) - 1, date.slice(8, 10));
-    const errorSpan = refs[idx].current.getElementsByTagName('span')[0];
+    const errorSpan = errorRefs[idx].current;
     const today = new Date();
 
     // Validation Check: Empty --> Date Set is in the Past --> Valid Date
@@ -94,7 +95,7 @@ export default function Catalog() {
   const validateEndDate = (date, idx) => {
     const dateEnd = new Date (date.slice(0, 4), date.slice(5, 7) - 1, date.slice(8, 10));
     const dateStart = new Date(inputStart.slice(0, 4), inputStart.slice(5, 7) - 1, inputStart.slice(8, 10));
-    const errorSpan = refs[idx].current.getElementsByTagName('span')[1];
+    const errorSpan = divRefs[idx].current.getElementsByTagName('span')[1];
     const today = new Date();
 
     // Validation Check: Empty --> Date Set is in the Past --> Date is earlier date than start date --> Date outside of resevation required dates (7 days) --> Valid
@@ -129,8 +130,8 @@ export default function Catalog() {
       </div>
       <div className="mb-2">{item.description}</div>
       <div className="mb-2 inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 inset-ring inset-ring-green-600/20 dark:bg-green-400/10 dark:text-green-400 dark:inset-ring-green-500/20">Daily Rate: ${Number(item.price / 100).toFixed(2)}</div>
-      <button className="items-center rounded-full bg-yellow-100 hover:bg-yellow-200 px-2 py-1 font-medium dark:bg-orange-600 dark:hover:bg-orange-900" onClick={() => toggleAvailability(idx)}>Check Availability</button>
-      <div ref={refs[idx]} className="hidden">
+      <button className={`self-end items-center rounded-full w-8 h-8 bg-yellow-300 hover:bg-yellow-600 px-1 py-1 font-medium dark:bg-orange-600 dark:hover:bg-orange-900 ${openIndex === idx ? 'rotate-45' : ''}`} onClick={() => toggleAvailability(idx)}>+</button>
+      <div ref={divRefs[idx]} className={`${openIndex === idx ? '' : 'hidden'}`}>
         <form className="flex flex-col">
           <label className="font-bold mb-1" htmlFor="reserve-start-ts">
             Start Date:
