@@ -82,27 +82,27 @@ const CatalogItem = ({ cart, setCart, item, idx, deleteItem }) => {
   }
 
   return (
-    <div className="flex flex-col justify-start items-start p-3 bg-latte rounded-lg">
+    <div className="flex flex-col justify-start items-start p-3 bg-light-brown rounded-lg">
       <div className="w-full flex justify-between items-center mb-2">
         <h2 className="font-bold text-lg text-chocolate">{item.name}</h2>
-        {cart.find((cartItem) => cartItem.inventory_uuid === item.inventory_uuid) && <div onMouseEnter={(e) => e.target.innerText = 'Remove'} onMouseLeave={(e) => e.target.innerText = 'Added'} onClick={() => deleteItem(item)} className="rounded-full bg-orange-50 px-2 py-1 text-xs font-bold text-orange-700 inset-ring inset-ring-orange-600/20 dark:bg-orange-400/10 dark:text-orange-400 dark:inset-ring-orange-500/20">Added</div>}
+        {cart.find((cartItem) => cartItem.inventory_uuid === item.inventory_uuid) && <button onMouseEnter={(e) => e.target.innerText = 'Remove'} onMouseLeave={(e) => e.target.innerText = 'Added'} onClick={() => deleteItem(item)} className="rounded-full bg-orange-50 px-2 py-1 text-xs font-bold text-orange-700 inset-ring inset-ring-orange-600/20 dark:bg-orange-400/10 dark:text-orange-400 dark:inset-ring-orange-500/20">Added</button>}
       </div>
       <div className="mb-2">{item.description}</div>
       <div className="mb-2 inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-800 inset-ring inset-ring-green-600/20 dark:bg-green-600/10 dark:text-green-700 dark:inset-ring-green-700/20">Daily Rate: ${Number(item.price / 100).toFixed(2)}</div>
-      <button className={`self-end items-center rounded-full w-8 h-8 bg-yellow-300 hover:bg-yellow-600 px-1 py-1 font-medium dark:bg-cinnamon dark:hover:bg-chocolate ${isOpen ? 'rotate-45' : ''}`} onClick={() => toggleAvailability()}>+</button>
+      <button className={`self-end items-center rounded-full w-8 h-8 bg-white hover:bg-latte px-1 py-1 font-medium dark:bg-cinnamon dark:hover:bg-chocolate ${isOpen ? 'rotate-45' : ''}`} onClick={() => toggleAvailability()}>+</button>
       <div className={isOpen ? '' : 'hidden'}>
         <form className="flex flex-col">
           <label className="font-bold mb-1 text-chocolate" htmlFor="reserve-start-ts">
             Start Date:
           </label>
-          <input className="rounded-full bg-white px-2 py-1 mb-2 dark:bg-light-brown" type="date" id="reserve-start-ts" name="reserve-start-ts" onChange={(e) => setInputStart(e.target.value)} value={inputStart} required/>
+          <input className="size-fit rounded-full bg-white px-2 py-1 mb-2 dark:bg-light-brown" type="date" id="reserve-start-ts" name="reserve-start-ts" max={inputEnd ? inputEnd : ''}  onChange={(e) => setInputStart(e.target.value)} value={inputStart} required/>
           <span ref={errSpanStartRef} className="hidden">{errorInputStart}</span>
           <label className="font-bold mb-1 text-chocolate" htmlFor="reserve-end-ts">
             End Date:
           </label>
-          <input className="rounded-full bg-white px-2 py-1 mb-2 dark:bg-light-brown" type="date" id="reserve-end-ts" name="reserve-end-ts" onChange={(e) => setInputEnd(e.target.value)} value={inputEnd} required/>
+          <input className="size-fit rounded-full bg-white px-2 py-1 mb-2 dark:bg-light-brown" type="date" id="reserve-end-ts" name="reserve-end-ts" min={inputStart ? inputStart : ''} onChange={(e) => setInputEnd(e.target.value)} value={inputEnd} required/>
           <span ref={errSpanEndRef} className="hidden">{errorInputEnd}</span>
-          <button type="submit" className="items-center rounded-full bg-light-brown hover:bg-chocolate px-2 py-1 font-medium dark:bg-cinnamon" onClick={(e) => handleAddCart(e)}>Add To Cart</button>
+          <button type="submit" className="items-center rounded-full bg-cinnamon hover:bg-chocolate px-2 py-1 font-medium dark:bg-cinnamon" onClick={(e) => handleAddCart(e)}>Add To Cart</button>
         </form>
       </div>
     </div>
