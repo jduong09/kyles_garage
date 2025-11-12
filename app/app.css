@@ -8,11 +8,12 @@
   --color-cinnamon: #DDB892;
   --color-light-brown: #E6CCB2;
   --color-light-chocolate: #EDE0D4;
+  --color-dark-bg: #121212;
 }
 
 html,
 body {
-  @apply bg-white dark:bg-light-chocolate;
+  @apply bg-light-chocolate dark:bg-dark-bg;
 
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
