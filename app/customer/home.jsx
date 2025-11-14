@@ -24,7 +24,7 @@ Some kind of barebones UI for Login Page.
 export default function Home() {
   const location = useLocation();
   const [cart, setCart] = useState([]);
-  const { isAuthenticated, user } = useAuth0();
+  const { isAuthenticated, user, getIdTokenClaims } = useAuth0();
 
   useEffect(() => {
     if (location.state) {
@@ -44,6 +44,21 @@ export default function Home() {
       });
     }
     syncUser();
+
+    const createBackendSession = async () => {
+      const claims = await getIdTokenClaims();
+      const idToken = await claims.__raw;
+
+      await fetch("http://localhost:3000/session/login", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ idToken })
+      });
+    };
+    createBackendSession();
   }, [isAuthenticated]);
 
   const deleteItem = (item) => {

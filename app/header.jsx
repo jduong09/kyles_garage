@@ -4,6 +4,15 @@ import { useAuth0 } from '@auth0/auth0-react';
 export const Header = ({ cart, loginPage }) => {
   const { isAuthenticated, logout } = useAuth0();
   const location = useLocation();
+
+  const handleLogout = async () => {
+    await fetch("http://localhost:3000/session/logout", {
+      method: 'POST',
+    });
+
+    logout({ logoutParams: { returnTo: location.origin } });
+  }
+  
   return (
     <header className="sticky top-0 flex justify-between items-center mb-4 shadow-lg p-4 bg-white dark:bg-black">
       <h1 className="text-5xl font-bold text-orange-600">Kyles Garage</h1>
@@ -18,7 +27,7 @@ export const Header = ({ cart, loginPage }) => {
         </NavLink>
         {!loginPage && isAuthenticated && <NavLink to="/profile" className="mr-8" state={{ cart: cart || [] }} end>Profile</NavLink>}
         {!loginPage && !isAuthenticated && <NavLink to="/login" className="mr-8" state={{ cart: cart || [], currentPath: location.pathname }} end>Login</NavLink>}
-        {!loginPage && isAuthenticated && <button type="button" onClick={() => logout({ logoutParams: { returnTo: location.origin } })}>Log Out</button>}
+        {!loginPage && isAuthenticated && <button type="button" onClick={() => handleLogout()}>Log Out</button>}
       </nav>
     </header>
   );

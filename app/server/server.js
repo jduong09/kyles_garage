@@ -1,12 +1,15 @@
 import express from 'express';
 import 'dotenv/config';
+import session from "express-session";
+import jwt from "jsonwebtoken";
+import { getKey } from './utilityFunctions.js';
 import { execute, migrate } from './db.js';
 import { inventoryScript } from './scripts/001_inventory.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-const { CLIENT_ID, CLIENT_DOMAIN, SECRET } = process.env;
+const { CLIENT_ID, CLIENT_DOMAIN, SECRET, SESSION_SECRET } = process.env;
 
 // inventoryScript();
 migrate();
@@ -28,6 +31,18 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+
+app.use(session({
+  secret: SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: false,
+    sameSite: "none",
+    maxAge: 1000 * 60 * 60 * 24
+  }
+}));
 
 // req.isAuthenticated is provided from the auth router
 app.get('/', (req, res) => {
@@ -65,4 +80,33 @@ app.post('/user', async (req, res) => {
   } else {
     user = result.rows[0];
   }
+});
+
+app.post("/session/login", async (req, res) => {
+  const { idToken } = req.body;
+
+  jwt.verify(idToken, getKey, { audience: CLIENT_ID, issuer: `https://${CLIENT_DOMAIN}/`, algorithms: ["RS256"]}, (err, decoded) => {
+    if (err) return res.status(401).send("Invalid Auth0 token");
+
+    req.session.user = {
+      sub: decoded.sub,
+      email: decoded.email,
+      name: decoded.name
+    }
+    console.log(req.session.user);
+
+    res.send({ ok: true });
+  });
+});
+
+app.post("/session/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.clearCookie("connect.sid", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "none",
+      maxAge: 1000 * 60 * 60 * 24
+    });
+    res.send({ ok: true });
+  });
 });

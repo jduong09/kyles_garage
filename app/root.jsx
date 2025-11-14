@@ -29,7 +29,6 @@ export function Layout({ children }) {
   const navigate = useNavigate();
 
   const onRedirectCallback = (appState) => {
-    console.log(appState.status);
     if (appState.navState) {
       navigate(appState.returnTo, { state: { cart: appState.navState.cart }});
     } else {
