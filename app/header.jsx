@@ -1,8 +1,8 @@
 import { NavLink, useLocation } from 'react-router';
 import { useAuth0 } from '@auth0/auth0-react';
 
-export const Header = ({ cart }) => {
-  const { loginWithRedirect, isAuthenticated, logout } = useAuth0();
+export const Header = ({ cart, loginPage }) => {
+  const { isAuthenticated, logout } = useAuth0();
   const location = useLocation();
   return (
     <header className="sticky top-0 flex justify-between items-center mb-4 shadow-lg p-4 bg-white dark:bg-black">
@@ -16,10 +16,9 @@ export const Header = ({ cart }) => {
             {cart.length !== 0 && <span className="w-2 h-2 p-2 rounded-full bg-black dark:bg-orange-600 text-white text-xs flex items-center justify-center absolute bottom-4 left-4">{cart.length}</span>}
           </div>
         </NavLink>
-        {isAuthenticated && <NavLink to="/profile" className="mr-8" state={{ cart: cart || [] }} end>Profile</NavLink>}
-        {!isAuthenticated 
-        ? <button type="button" onClick={() => loginWithRedirect({ appState: { returnTo: location.pathname } })}>Log In</button>
-        : <button type="button" onClick={() => logout({ logoutParams: { returnTo: location.origin } })}>Log Out</button>}
+        {!loginPage && isAuthenticated && <NavLink to="/profile" className="mr-8" state={{ cart: cart || [] }} end>Profile</NavLink>}
+        {!loginPage && !isAuthenticated && <NavLink to="/login" className="mr-8" state={{ cart: cart || [], currentPath: location.pathname }} end>Login</NavLink>}
+        {!loginPage && isAuthenticated && <button type="button" onClick={() => logout({ logoutParams: { returnTo: location.origin } })}>Log Out</button>}
       </nav>
     </header>
   );

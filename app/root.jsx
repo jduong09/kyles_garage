@@ -29,11 +29,11 @@ export function Layout({ children }) {
   const navigate = useNavigate();
 
   const onRedirectCallback = (appState) => {
-    console.log(appState);
+    console.log(appState.status);
     if (appState.navState) {
       navigate(appState.returnTo, { state: { cart: appState.navState.cart }});
     } else {
-      navigate(appState?.returnTo || "http://localhost:5173");
+      navigate(appState?.returnTo || "http://localhost:5173", { state: { status: appState.status }});
     }
   }
 

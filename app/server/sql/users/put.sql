@@ -1,2 +1,2 @@
-INSERT INTO users(status, email)
-  VALUES('external', $1);
+INSERT INTO users(email, status)
+  VALUES($1, $2);

@@ -4,6 +4,7 @@ export default [
   index("customer/home.jsx"),
   route("catalog/", "customer/catalog.jsx"),
   route("checkout/", "customer/checkout/checkout.jsx"),
+  route("login/", "./login.jsx"),
   route("payment/", "customer/checkout/payment.jsx"),
   route("profile/", "customer/profile.jsx"),
   route("admin/", "admin/admin.jsx"), // TODO: Add some middleware to this route to authenticate the viewer as an admin

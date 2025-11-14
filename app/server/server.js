@@ -56,12 +56,12 @@ app.get('/checkout', (req, res) => {
 });
 
 app.post('/user', async (req, res) => {
-  const { email } = req.body;
+  const { email, status } = req.body;
   let user;
-  const result = await execute('/sql/users/get_by_email.sql', [email]);
+  const result = await execute('/sql/users/get_by_email.sql', [email, status]);
 
   if (!result.rows.length) {
-    user = await execute('/sql/users/put.sql', [email]);
+    user = await execute('/sql/users/put.sql', [email, status]);
   } else {
     user = result.rows[0];
   }

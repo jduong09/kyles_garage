@@ -11,6 +11,16 @@ export function meta() {
   ];
 }
 
+/*
+Currently have signup with either admin or customer privileges for example.
+
+TODO To Have PR for Review
+Need a Backend session that stores the user info, the user buyer or seller history (separate PR)
+And especially the status (are they admin/customer) so that we can block customers from accessing Admin routes.
+Need a Guard on Admin Routes.
+Some kind of barebones UI for Login Page.
+*/ 
+
 export default function Home() {
   const location = useLocation();
   const [cart, setCart] = useState([]);
@@ -24,13 +34,13 @@ export default function Home() {
 
   useEffect(()  => {
     const syncUser = async () => {
-      if (!isAuthenticated) return;5
+      if (!isAuthenticated) return;
       await fetch("http://localhost:3000/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: user.email }),
+        body: JSON.stringify({ email: user.email, status: localStorage.getItem("status") }),
       });
     }
     syncUser();
@@ -43,7 +53,7 @@ export default function Home() {
   }
 
   return (<div>
-    <Header cart={cart} />
+    <Header cart={cart} loginPage={false} />
     <Landing />
   </div>);
 }

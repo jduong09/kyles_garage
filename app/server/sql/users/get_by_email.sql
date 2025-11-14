@@ -1,1 +1,1 @@
-SELECT first_name, last_name, phone, email FROM users WHERE email = $1;
+SELECT first_name, last_name, phone, email FROM users WHERE email = $1 AND status=$2;
