@@ -9,6 +9,7 @@ export const Header = ({ cart, loginPage }) => {
     await fetch("http://localhost:3000/session/logout", {
       method: 'POST',
     });
+    localStorage.removeItem("status");
 
     logout({ logoutParams: { returnTo: location.origin } });
   }

@@ -1,5 +1,6 @@
 import { AdminHeader } from '../admin-header';
-import { withAuthenticationRequired } from '@auth0/auth0-react';
+import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
+import {ProtectedLoader} from './authGuard';
 
 // This is the same data in the reservations.jsx file
 // Eventually wherever we pull our reservation data we'll want to use it in some
@@ -169,7 +170,16 @@ const reservationCard = (idx, payment_id, name, catalog_name, reserve_start, res
   </div>
 );
 
-const Checkout = () => {
+export const loader = async () => {
+  const status = await localStorage.getItem('status');
+  const { isAuthenticated } = useAuth0();
+  if (status === 'external' || !isAuthenticated) {
+    return redirect('/catalog')
+  }
+  return null // allow render
+}
+
+export default Checkout = () => {
   const todayUTC = new Date().toISOString().slice(0, 10);
   const [reservedToday, dueToday] = reservations.reduce((acc, r) => {
     if(todayUTC === new Date(r.reserve_end).toISOString().slice(0, 10)) {
@@ -195,7 +205,3 @@ const Checkout = () => {
     </div>
   );
 };
-
-export default withAuthenticationRequired(Checkout, {
-  onRedirecting: () => (<div>Redirecting you to the login page...</div>)
-});

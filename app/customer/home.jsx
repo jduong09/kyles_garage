@@ -35,11 +35,13 @@ export default function Home() {
   useEffect(()  => {
     const syncUser = async () => {
       if (!isAuthenticated) return;
-      await fetch('http://localhost:3000/user', {
+      const response = await fetch('http://localhost:3000/user', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', },
         body: JSON.stringify({ email: user.email, status: localStorage.getItem('status') }),
       });
+      const obj = await response.json();
+      localStorage.setItem("status", obj.status);
     }
     syncUser();
 

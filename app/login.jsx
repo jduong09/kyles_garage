@@ -15,7 +15,6 @@ const LoginPage = () => {
     }
   }, []);
 
-
   const handleLogin = (type) => {
     localStorage.setItem('status', type);
     loginWithRedirect({ appState: { returnTo: location.state.currentPath, status: type }});

@@ -80,6 +80,8 @@ app.post('/user', async (req, res) => {
   } else {
     user = result.rows[0];
   }
+
+  res.send({ ok: true, status });
 });
 
 app.post("/session/login", async (req, res) => {
@@ -93,8 +95,6 @@ app.post("/session/login", async (req, res) => {
       email: decoded.email,
       name: decoded.name
     }
-    console.log(req.session.user);
-
     res.send({ ok: true });
   });
 });
