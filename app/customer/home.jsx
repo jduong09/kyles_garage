@@ -6,8 +6,8 @@ import { useAuth0 } from '@auth0/auth0-react';
 
 export function meta() {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: 'New React Router App' },
+    { name: 'description', content: 'Welcome to React Router!' },
   ];
 }
 
@@ -35,12 +35,10 @@ export default function Home() {
   useEffect(()  => {
     const syncUser = async () => {
       if (!isAuthenticated) return;
-      await fetch("http://localhost:3000/user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: user.email, status: localStorage.getItem("status") }),
+      await fetch('http://localhost:3000/user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', },
+        body: JSON.stringify({ email: user.email, status: localStorage.getItem('status') }),
       });
     }
     syncUser();
@@ -49,12 +47,10 @@ export default function Home() {
       const claims = await getIdTokenClaims();
       const idToken = await claims.__raw;
 
-      await fetch("http://localhost:3000/session/login", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json"
-        },
+      await fetch('http://localhost:3000/session/login', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ idToken })
       });
     };

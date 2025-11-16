@@ -15,14 +15,10 @@ const LoginPage = () => {
     }
   }, []);
 
-  const handleCustomerLogin = () => {
-    localStorage.setItem("status", "external");
-    loginWithRedirect({ appState: { returnTo: location.state.currentPath, status: "external" } });
-  }
 
-  const handleAdminLogin = () => {
-    localStorage.setItem("status", "internal");
-    loginWithRedirect({ appState: { returnTo: location.state.currentPath, status: "internal" } });
+  const handleLogin = (type) => {
+    localStorage.setItem('status', type);
+    loginWithRedirect({ appState: { returnTo: location.state.currentPath, status: type }});
   }
 
   return (
@@ -30,11 +26,11 @@ const LoginPage = () => {
       <Header cart={location.state.cart} loginPage={true}/>
       <div>
         <h2>New, or existing customer?</h2>
-        <button type="button" onClick={() => handleCustomerLogin()}>Log In</button>
+        <button type="button" onClick={() => handleLogin('external')}>Log In</button>
       </div>
       <div>
         <h2>Seller?</h2>
-        <button type="button" onClick={() => handleAdminLogin()}>Log In</button>
+        <button type="button" onClick={() => handleLogin('internal')}>Log In</button>
       </div>
     </div>
   );

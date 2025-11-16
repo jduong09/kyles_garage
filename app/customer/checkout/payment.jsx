@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router";
-import { RequireAuth } from "../requireAuth";
-import { Header } from "../../header";
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router';
+import { RequireAuth } from '../requireAuth';
+import { Header } from '../../header';
+
 const PaymentPage = () => {
   const [cart, setCart] = useState([]);
   const location = useLocation();

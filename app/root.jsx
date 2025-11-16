@@ -5,10 +5,10 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useNavigate
+  useNavigate,
 } from 'react-router';
 import { Auth0Provider } from '@auth0/auth0-react';
-import "./app.css";
+import './app.css';
 
 export const links = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -32,7 +32,7 @@ export function Layout({ children }) {
     if (appState.navState) {
       navigate(appState.returnTo, { state: { cart: appState.navState.cart }});
     } else {
-      navigate(appState?.returnTo || "http://localhost:5173", { state: { status: appState.status }});
+      navigate(appState?.returnTo || 'http://localhost:5173', { state: { status: appState.status }});
     }
   }
 
@@ -49,7 +49,7 @@ export function Layout({ children }) {
           domain={VITE_APP_DOMAIN}
           clientId={VITE_APP_CLIENT_ID}
           authorizationParams={{
-            redirect_uri: "http://localhost:5173"
+            redirect_uri: 'http://localhost:5173'
           }}
           onRedirectCallback={onRedirectCallback}
         >
@@ -67,15 +67,15 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
+  let message = 'Oops!';
+  let details = 'An unexpected error occurred.';
   let stack;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
+    message = error.status === 404 ? '404' : 'Error';
     details =
       error.status === 404
-        ? "The requested page could not be found."
+        ? 'The requested page could not be found.'
         : error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
