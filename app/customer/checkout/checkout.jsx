@@ -30,7 +30,6 @@ const Checkout = () => {
       </li>
     );
   });
-  console.log(cart);
 
   return (
     <div className="p-4">

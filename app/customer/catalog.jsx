@@ -4,7 +4,7 @@ import { useLocation } from 'react-router';
 
 const SECONDS_IN_DAY = 86400000;
 
-export default function Catalog() {
+const Catalog = () => {
   const location = useLocation();
   const [items, setItems] = useState([]);
   const [cart, setCart] = useState([]);
@@ -147,6 +147,7 @@ export default function Catalog() {
       </div>
     </li>)
   });
+
   return (
   <div>
     <Header cart={cart} loginPage={false} />
@@ -156,3 +157,5 @@ export default function Catalog() {
     </div>
   </div>);
 }
+
+export default Catalog;

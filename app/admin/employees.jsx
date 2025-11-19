@@ -1,4 +1,4 @@
-import { AdminHeader } from '../admin-header';
+import { AdminHeader } from './adminHeader';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
 
 const employees = [

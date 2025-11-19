@@ -1,4 +1,4 @@
-import { AdminHeader } from '../admin-header';
+import { AdminHeader } from './adminHeader.jsx';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
 
 // TODO: Remove this eventually -- this is just testing data
@@ -317,7 +317,7 @@ const productCard = (catalog_id, name, description, dailyRate) => (
   </div>
 );
 
-const Catalog = () => (
+const AdminCatalog = () => (
   <div>
     <AdminHeader />
     <h2 className="pl-4 text-xl font-bold">Larger Tools</h2>
@@ -332,6 +332,6 @@ const Catalog = () => (
   </div>
 );
 
-export default withAuthenticationRequired(Catalog, {
+export default withAuthenticationRequired(AdminCatalog, {
   onRedirecting: () => (<div>Redirecting you to the login page...</div>)
 });

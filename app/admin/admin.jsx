@@ -1,4 +1,5 @@
-import { AdminHeader } from '../admin-header';
+import { AdminHeader } from './adminHeader';
+import { Outlet } from 'react-router';
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import {ProtectedLoader} from './authGuard';
 
@@ -170,16 +171,7 @@ const reservationCard = (idx, payment_id, name, catalog_name, reserve_start, res
   </div>
 );
 
-export const loader = async () => {
-  const status = await localStorage.getItem('status');
-  const { isAuthenticated } = useAuth0();
-  if (status === 'external' || !isAuthenticated) {
-    return redirect('/catalog')
-  }
-  return null // allow render
-}
-
-export default Checkout = () => {
+const AdminCheckout = () => {
   const todayUTC = new Date().toISOString().slice(0, 10);
   const [reservedToday, dueToday] = reservations.reduce((acc, r) => {
     if(todayUTC === new Date(r.reserve_end).toISOString().slice(0, 10)) {
@@ -202,6 +194,9 @@ export default Checkout = () => {
       <div className="pl-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         {reservedToday.map(({name, catalog_name, reserve_start, reserve_end, payment_id}, idx) => reservationCard(idx, payment_id, name, catalog_name, reserve_start, reserve_end))}
       </div>
+      <Outlet />
     </div>
   );
 };
+
+export default AdminCheckout;
