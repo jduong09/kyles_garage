@@ -22,20 +22,20 @@ const Checkout = () => {
     return (
       <li className="mb-3" key={idx}>
         <div className="flex justify-between align-center">
-          <h4>{item.name}</h4>
+          <h4 className="text-md text-chocolate font-bold">{item.name}</h4>
           <span>${item.price}</span>
         </div>
-        <div>Reserve from <span className="text-indigo-300">{item.startDate.toLocaleDateString()}</span> to <span className="text-indigo-300">{item.endDate.toLocaleDateString()}</span></div>
-        <button className="items-center rounded-full bg-blue-600 hover:bg-blue-700 px-2 py-1 font-medium dark:bg-blue-500" onClick={() => deleteItem(item)}>Delete</button>
+        <div>Reserve from <span className="text-latte font-medium">{item.startDate.toLocaleDateString()}</span> to <span className="text-latte font-medium">{item.endDate.toLocaleDateString()}</span></div>
+        <button className="items-center rounded-full bg-blue-600 hover:bg-blue-700 px-2 py-1 font-medium dark:bg-blue-500" onClick={() => deleteItem(item)}>Remove</button>
       </li>
     );
   });
 
   return (
-    <div className="p-4">
+    <div className="">
       <Header cart={cart} />
-      <div className="bg-gray-500 p-2">
-        <h2 className="text-3xl font-bold pb-4 mb-4 border-b-4">Checkout</h2>
+      <div className="w-1/2 ml-auto mr-auto bg-light-brown dark:bg-neutral-800 p-2">
+        <h2 className="text-lg font-bold pb-4 mb-4 border-b-4 text-chocolate dark:text-latte">Checkout</h2>
         <ul className="flex flex-col">{listCart}</ul>
       </div>
     </div>
