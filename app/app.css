@@ -11,7 +11,7 @@
   --color-light-brown: #E6CCB2;
   --color-light-chocolate: #EDE0D4;
   --color-dark-bg: #121212;
-  --sun: invert(61%) sepia(92%) saturate(1333%) hue-rotate(356deg) brightness(102%) contrast(106%);
+  --sun: brightness(0) saturate(100%) invert(66%) sepia(29%) saturate(1574%) hue-rotate(342deg) brightness(101%) contrast(102%);
   --moon: invert(11%) sepia(53%) saturate(3439%) hue-rotate(236deg) brightness(82%) contrast(102%);
 }
 

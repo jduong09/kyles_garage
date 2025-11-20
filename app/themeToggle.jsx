@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import sunIcon from "../public/sun.svg";
-import moonIcon from "../public/moon.svg";
+import sunIcon from '../public/sun.svg';
+import moonIcon from '../public/moon.svg';
 
 const ThemeToggle = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -17,10 +17,10 @@ const ThemeToggle = () => {
   return (
     <button
       onClick={() => setIsDarkMode(!isDarkMode)}
-      className="w-10 px-2 rounded-full bg-light-brown dark:bg-neutral-500"
+      className="w-10 px-2 rounded-full bg-white dark:bg-neutral-500"
       aria-label="Toggle Dark Mode"
     >
-      <img src={!isDarkMode ? sunIcon : moonIcon} className={`w-4 ${!isDarkMode ? 'filter-(--sun)' : 'filter-(--moon) ml-auto'}`}/>
+      <img src={isDarkMode ? moonIcon : sunIcon} className={`w-4 ${isDarkMode ? 'filter-(--moon) ml-auto': 'filter-(--sun)'}`}/>
     </button>
   );
 }
