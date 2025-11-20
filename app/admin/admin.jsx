@@ -1,7 +1,6 @@
 import { AdminHeader } from './adminHeader';
 import { Outlet } from 'react-router';
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
-import {ProtectedLoader} from './authGuard';
 
 // This is the same data in the reservations.jsx file
 // Eventually wherever we pull our reservation data we'll want to use it in some

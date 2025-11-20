@@ -1,6 +1,6 @@
-import { useLocation } from "react-router";
-import { useEffect, useState } from "react";
-import { Header } from "../header";
+import { useLocation } from 'react-router';
+import { useEffect, useState } from 'react';
+import { Header } from '../header';
 
 const Profile = () => {
   const location = useLocation();

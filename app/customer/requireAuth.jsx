@@ -1,5 +1,5 @@
-import { withAuthenticationRequired } from "@auth0/auth0-react";
-import { useLocation } from "react-router";
+import { withAuthenticationRequired } from '@auth0/auth0-react';
+import { useLocation } from 'react-router';
 
 export const RequireAuth = (component) => {
   return () => {

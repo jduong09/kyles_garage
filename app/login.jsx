@@ -23,13 +23,15 @@ const LoginPage = () => {
   return (
     <div>
       <Header cart={location.state.cart} loginPage={true}/>
-      <div>
-        <h2>New, or existing customer?</h2>
-        <button type="button" onClick={() => handleLogin('external')}>Log In</button>
-      </div>
-      <div>
-        <h2>Seller?</h2>
-        <button type="button" onClick={() => handleLogin('internal')}>Log In</button>
+      <div className="mt-8 flex size-full justify-center gap-10">
+        <div className="flex flex-col">
+          <h2 className="mb-2">New, or existing customer?</h2>
+          <button type="button" className="items-center rounded-full bg-blue-600 hover:bg-blue-700 px-2 py-1 font-medium dark:bg-blue-500" onClick={() => handleLogin('external')}>Log In</button>
+        </div>
+        <div className="flex flex-col">
+          <h2 className="mb-2">Seller?</h2>
+          <button type="button" className="items-center rounded-full bg-blue-600 hover:bg-blue-700 px-2 py-1 font-medium dark:bg-blue-500" onClick={() => handleLogin('internal')}>Log In</button>
+        </div>
       </div>
     </div>
   );

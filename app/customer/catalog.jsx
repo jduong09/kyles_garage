@@ -35,7 +35,7 @@ const Catalog = () => {
     }
     getItems();
 
-    if (location.state && location.state.cart.length) {
+    if (location.state && location.state.cart) {
       setCart(location.state.cart);
     }
   }, []);
