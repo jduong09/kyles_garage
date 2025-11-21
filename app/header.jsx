@@ -1,7 +1,10 @@
 import { NavLink } from 'react-router';
 import ThemeToggle from './themeToggle';
+import Drawer from './drawer';
+import { useState } from 'react';
 
 export const Header = ({ cart }) => {
+  const [isOpen, setOpen] = useState(false);
   return (
     <header className="sticky top-0 flex justify-between items-center mb-4 shadow-lg p-4 bg-light-chocolate dark:bg-neutral-900">
       <h1 className="text-5xl font-bold text-chocolate dark:text-latte">Kyles Garage</h1>
@@ -22,6 +25,8 @@ export const Header = ({ cart }) => {
         </NavLink>
         <ThemeToggle />
       </nav>
+      <button className="absolute left-0 top-0" onClick={() => setOpen(!isOpen)}>Open Drawer</button>
+      <Drawer isOpen={isOpen} />
     </header>
   );
 };
