@@ -2,11 +2,14 @@ import { Header } from '../header';
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import CatalogItem from './catalogItem';
+import Drawer from '../drawer';
 
 export default function Catalog() {
   const location = useLocation();
   const [items, setItems] = useState([]);
   const [cart, setCart] = useState([]);
+  const [isOpen, setOpen] = useState(false);
+
 
   useEffect(() => {
     const getItems = async () => {
@@ -35,6 +38,7 @@ export default function Catalog() {
       return cartItem.inventory_uuid !== item.inventory_uuid;
     }));
   }
+
   const displayedItems = items.map((item, idx) => {
     return (
       <li key={idx}>
@@ -50,11 +54,12 @@ export default function Catalog() {
 
   return (
     <div>
-      <Header cart={cart}/>
+      <Header cart={cart} setOpen={setOpen} isOpen={isOpen} />
       <div className="p-4 bg-light-chocolate dark:bg-dark-bg">
         <h2 className="text-3xl font-bold mb-4 text-chocolate dark:text-latte">Inventory</h2>
         <div><ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">{displayedItems}</ul></div>
       </div>
+      <Drawer cart={cart} isOpen={isOpen} />
     </div>
   );
 }
