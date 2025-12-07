@@ -75,7 +75,7 @@ const CatalogItem = ({ cart, setCart, item, idx, deleteItem }) => {
     const startDate = new Date (inputStart.slice(0, 4), inputStart.slice(5, 7) - 1, inputStart.slice(8, 10));
 
     const numOfReservedDays = (endDate - startDate === 0) ? 1 : ((endDate - startDate) / SECONDS_IN_DAY);
-    setCart([...cart, { inventory_uuid: item.inventory_uuid, name: item.name, price: Number((item.price / 100) * numOfReservedDays).toFixed(2), startDate, endDate }]);
+    setCart([...cart, { inventory_uuid: item.inventory_uuid, name: item.name, price: Number((item.price / 100) * numOfReservedDays).toFixed(2), startDate, endDate, days: numOfReservedDays }]);
     setInputStart('');
     setInputEnd('');
     toggleAvailability();

@@ -59,7 +59,7 @@ export default function Catalog() {
         <h2 className="text-3xl font-bold mb-4 text-chocolate dark:text-latte">Inventory</h2>
         <div><ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">{displayedItems}</ul></div>
       </div>
-      <Drawer cart={cart} isOpen={isOpen} />
+      <Drawer deleteItem={deleteItem} cart={cart} isOpen={isOpen} />
     </div>
   );
 }
