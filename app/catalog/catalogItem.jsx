@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 
 const SECONDS_IN_DAY = 86400000;
 
-const CatalogItem = ({ cart, setCart, item, idx, deleteItem }) => {
+const CatalogItem = ({ cart, setCart, item, deleteItem }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [errorInputStart, setErrorInputStart] = useState('');
   const [errorInputEnd, setErrorInputEnd] = useState('');

@@ -6,11 +6,11 @@ export const Header = ({ cart, setOpen }) => {
     <header className="sticky top-0 flex justify-between items-center mb-4 shadow-lg p-4 bg-light-chocolate dark:bg-neutral-900">
       <h1 className="text-5xl font-bold text-chocolate dark:text-latte">Kyles Garage</h1>
       <nav className="flex justify-between text-chocolate dark:text-latte">
-        <NavLink to="/" className="font-bold mr-2 group transition duration-300" state={{ cart: cart || [] }} end>
+        <NavLink to="/" className="font-bold mr-2 group transition duration-300" end>
           Home
           <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-chocolate dark:bg-latte"></span>
         </NavLink>
-        <NavLink to="/catalog" className="font-bold mr-2 group transition duration-300" state={{ cart: cart || [] }} end>
+        <NavLink to="/catalog" className="font-bold mr-2 group transition duration-300" end>
           Catalog
           <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-chocolate dark:bg-latte"></span>
         </NavLink>

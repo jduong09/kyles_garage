@@ -1,16 +1,8 @@
 import { Header } from '../header';
-import { useLocation } from 'react-router';
-import { useEffect, useState } from 'react';
+import { useOutletContext } from 'react-router';
 
 const Checkout = () => {
-  const location = useLocation();
-  const [cart, setCart] = useState([]);
-
-  useEffect(() => {
-    if (location.state.cart.length) {
-      setCart(location.state.cart);
-    }
-  }, []);
+  const { cart, setCart } = useOutletContext();
 
   const deleteItem = (item) => {
     setCart(cart.filter(cartItem => {
@@ -33,7 +25,6 @@ const Checkout = () => {
 
   return (
     <div className="p-4">
-      <Header cart={cart} />
       <div className="bg-gray-500 p-2">
         <h2 className="text-3xl font-bold pb-4 mb-4 border-b-4">Checkout</h2>
         <ul className="flex flex-col">{listCart}</ul>

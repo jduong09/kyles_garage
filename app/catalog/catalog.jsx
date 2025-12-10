@@ -1,16 +1,11 @@
-import { Header } from '../header';
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router';
 import CatalogItem from './catalogItem';
-import Drawer from '../drawer';
+import { useOutletContext } from 'react-router';
 
 export default function Catalog() {
-  const location = useLocation();
   const [items, setItems] = useState([]);
-  const [cart, setCart] = useState([]);
-  const [isOpen, setOpen] = useState(false);
-
-
+  const { cart, setCart, deleteItem } = useOutletContext();
+  
   useEffect(() => {
     const getItems = async () => {
       try {
@@ -27,17 +22,7 @@ export default function Catalog() {
       }
     }
     getItems();
-
-    if (location.state.cart.length) {
-      setCart(location.state.cart);
-    }
   }, []);
-
-  const deleteItem = (item) => {
-    setCart(cart.filter(cartItem => {
-      return cartItem.inventory_uuid !== item.inventory_uuid;
-    }));
-  }
 
   const displayedItems = items.map((item, idx) => {
     return (
@@ -54,15 +39,10 @@ export default function Catalog() {
 
   return (
     <div>
-      <Header cart={cart} setOpen={setOpen} isOpen={isOpen} />
       <div className="p-4 bg-light-chocolate dark:bg-dark-bg">
         <h2 className="text-3xl font-bold mb-4 text-chocolate dark:text-latte">Inventory</h2>
         <div><ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">{displayedItems}</ul></div>
       </div>
-      <Drawer deleteItem={deleteItem} cart={cart} setOpen={setOpen} isOpen={isOpen} />
-      <div id="drawer-overlay"
-        className={`w-full h-full absolute top-0 left-0 z-4 bg-black opacity-75 ${isOpen === true ? "visible" : "invisible"}`}
-        onClick={() => setOpen(false)}></div>
     </div>
   );
 }

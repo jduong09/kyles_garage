@@ -1,3 +1,5 @@
+import { NavLink } from "react-router";
+
 const Drawer = ({ deleteItem, cart, setOpen, isOpen}) => {
   const displayedItems = cart.map((item, idx) => {
     return (
@@ -28,8 +30,10 @@ const Drawer = ({ deleteItem, cart, setOpen, isOpen}) => {
         <ul className="p-4 border-b-2">{displayedItems}</ul>
         <div className="p-4 flex flex-wrap justify-between items-center mt-auto">
           <h3 className="flex-1/2 font-bold dark:text-latte">Total</h3>
-          <div className="flex-1/2 text-end font-bold dark:text-white">${cart.reduce((total, curr) => Math.floor((total + Number(curr.finalPrice)) * 100) / 100, 0)}</div>
-          <button className="flex-1 items-center rounded-full bg-chocolate hover:bg-latte mt-4 px-1 py-2 font-medium dark:bg-latte dark:text-gray-300 dark:hover:bg-chocolate">Checkout</button>
+          <div className="flex-1/2 text-end font-bold dark:text-white">${cart.reduce((total, curr) => (total + parseFloat(curr.finalPrice)).toFixed(2), 0)}</div>
+          <NavLink to="/checkout" end>
+            <button className="flex-1 items-center rounded-full bg-chocolate hover:bg-latte mt-4 px-1 py-2 font-medium dark:bg-latte dark:text-gray-300 dark:hover:bg-chocolate" onClick={() => setOpen(false)}>Checkout</button>
+          </NavLink >
         </div>
       </div>}
     </div>
