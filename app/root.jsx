@@ -6,7 +6,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from 'react-router';
-import {Children, isValidElement, cloneElement, useState} from 'react';
+import { useState } from 'react';
 import { Header } from './header';
 import Drawer from './drawer';
 import "./app.css";

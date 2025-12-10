@@ -1,4 +1,3 @@
-import { Header } from '../header';
 import { useOutletContext } from 'react-router';
 
 const Checkout = () => {
