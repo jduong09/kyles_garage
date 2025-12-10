@@ -60,6 +60,9 @@ export default function Catalog() {
         <div><ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">{displayedItems}</ul></div>
       </div>
       <Drawer deleteItem={deleteItem} cart={cart} setOpen={setOpen} isOpen={isOpen} />
+      <div id="drawer-overlay"
+        className={`w-full h-full absolute top-0 left-0 z-4 bg-black opacity-75 ${isOpen === true ? "visible" : "invisible"}`}
+        onClick={() => setOpen(false)}></div>
     </div>
   );
 }
