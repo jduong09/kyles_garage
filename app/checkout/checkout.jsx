@@ -1,10 +1,16 @@
 import { Header } from '../header';
 import { useLocation } from 'react-router';
 import { useEffect, useState } from 'react';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import CheckoutForm from './checkoutForm';
+
+const stripePromise = loadStripe('');
 
 const Checkout = () => {
   const location = useLocation();
   const [cart, setCart] = useState([]);
+  const [clientSecret, setClientSecret] = useState('');
 
   useEffect(() => {
     if (location.state.cart.length) {
@@ -17,6 +23,30 @@ const Checkout = () => {
       return cartItem.inventory_uuid !== item.inventory_uuid;
     }));
   }
+
+  const handlePayment = async () => {
+    const response = await fetch('http://localhost:3000/checkout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        price: 2000,
+      }),
+    });
+
+    const result = await response.json();
+    setClientSecret(result.client_secret);
+  }
+
+  const appearance = {
+    theme: 'stripe',
+  };
+  const options = {
+    clientSecret,
+    appearance,
+  };
 
   const listCart = cart.map((item, idx) => {
     return (
@@ -37,6 +67,11 @@ const Checkout = () => {
       <div className="bg-gray-500 p-2">
         <h2 className="text-3xl font-bold pb-4 mb-4 border-b-4">Checkout</h2>
         <ul className="flex flex-col">{listCart}</ul>
+        <button onClick={handlePayment}>Send Stripe Request</button>
+        {clientSecret && 
+        <Elements options={options} stripe={stripePromise}>
+          <CheckoutForm />
+        </Elements>}
       </div>
     </div>
   );
