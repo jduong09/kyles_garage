@@ -1,4 +1,5 @@
-const stripe = require('stripe')('');
+import 'dotenv/config';
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 app.get('/secret', async (req, res) => {
   const paymentIntent = await stripe.paymentIntents.create({
