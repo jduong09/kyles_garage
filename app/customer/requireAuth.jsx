@@ -1,7 +1,8 @@
 import { withAuthenticationRequired } from '@auth0/auth0-react';
 import { useLocation } from 'react-router';
 
-export const RequireAuth = (component) => {
+export const RequireAuth = (component, status) => {
+  localStorage.setItem('status', status);
   return () => {
     const location = useLocation();
 

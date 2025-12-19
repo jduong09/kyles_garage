@@ -24,6 +24,7 @@ export default function Home() {
 
   useEffect(()  => {
     const syncUser = async () => {
+      console.log(localStorage.getItem('status'));
       if (!isAuthenticated) return;
       const response = await fetch('http://localhost:3000/user', {
         method: 'POST',

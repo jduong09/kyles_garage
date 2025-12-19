@@ -24,4 +24,4 @@ const PaymentPage = () => {
   );
 };
 
-export default RequireAuth(PaymentPage);
+export default RequireAuth(PaymentPage, 'external');
