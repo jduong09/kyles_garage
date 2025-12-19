@@ -26,13 +26,14 @@ export default function Home() {
     const syncUser = async () => {
       console.log(localStorage.getItem('status'));
       if (!isAuthenticated) return;
+      /* URL is for testing only */ 
       const response = await fetch('http://localhost:3000/user', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', },
         body: JSON.stringify({ email: user.email, status: localStorage.getItem('status') }),
       });
       const obj = await response.json();
-      localStorage.setItem("status", obj.status);
+      localStorage.setItem('status', obj.status);
     }
     syncUser();
 
@@ -41,6 +42,7 @@ export default function Home() {
       const claims = await getIdTokenClaims();
       const idToken = await claims?.__raw;
 
+      /* URL is for testing only */ 
       await fetch('http://localhost:3000/session/login', {
         method: 'POST',
         credentials: 'include',
