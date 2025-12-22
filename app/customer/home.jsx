@@ -24,7 +24,6 @@ export default function Home() {
 
   useEffect(()  => {
     const syncUser = async () => {
-      console.log(localStorage.getItem('status'));
       if (!isAuthenticated) return;
       /* URL is for testing only */ 
       const response = await fetch('http://localhost:3000/user', {

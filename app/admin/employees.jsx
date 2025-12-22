@@ -1,5 +1,5 @@
 import { AdminHeader } from './adminHeader';
-import { withAuthenticationRequired } from '@auth0/auth0-react';
+import { RequireAuth } from '../requireAuth';
 
 const employees = [
   {
@@ -79,6 +79,4 @@ const Employees = () => (
   </div>
 );
 
-export default withAuthenticationRequired(Employees, {
-  onRedirecting: () => (<div>Redirecting you to the login page...</div>)
-});
+export default RequireAuth(Employees, 'internal');

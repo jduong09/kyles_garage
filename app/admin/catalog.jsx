@@ -1,5 +1,5 @@
 import { AdminHeader } from './adminHeader.jsx';
-import { withAuthenticationRequired } from '@auth0/auth0-react';
+import { RequireAuth } from '../requireAuth.jsx';
 
 // TODO: Remove this eventually -- this is just testing data
 const seedData = {
@@ -331,6 +331,4 @@ const AdminCatalog = () => (
   </div>
 );
 
-export default withAuthenticationRequired(AdminCatalog, {
-  onRedirecting: () => (<div>Redirecting you to the login page...</div>)
-});
+export default RequireAuth(AdminCatalog, 'internal');

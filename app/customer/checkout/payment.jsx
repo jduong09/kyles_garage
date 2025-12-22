@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
-import { RequireAuth } from '../requireAuth';
+import { RequireAuth } from '../../requireAuth';
 import { Header } from '../../header';
 
 const PaymentPage = () => {

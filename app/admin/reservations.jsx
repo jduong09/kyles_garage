@@ -1,5 +1,5 @@
 import { AdminHeader } from './adminHeader';
-import { withAuthenticationRequired } from '@auth0/auth0-react';
+import { RequireAuth } from '../requireAuth';
 
 const reservations = [
   {
@@ -173,6 +173,4 @@ const Reservations = () => (
   </div>
 );
 
-export default withAuthenticationRequired(Reservations, {
-  onRedirecting: () => (<div>Redirecting you to the login page...</div>)
-});
+export default RequireAuth(Reservations, 'internal');
