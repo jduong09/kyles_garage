@@ -107,7 +107,7 @@ const CatalogItem = ({ cart, setCart, item, idx, deleteItem }) => {
           <label className="font-bold mb-1 text-chocolate dark:text-latte" htmlFor="reserve-end-ts">
             End Date:
           </label>
-          <input className="size-fit rounded-full bg-cinnamon px-2 py-1 mb-2 dark:bg-neutral-500 dark:text-gray-300" type="date" id="reserve-end-ts" name="reserve-end-ts" min={inputStart ? inputStart : ''} onChange={(e) => setInputEnd(e.target.value)} value={inputEnd} required/>
+          <input className="size-fit rounded-full bg-cinnamon px-2 py-1 mb-2 dark:bg-neutral-500 dark:text-gray-300" type="date" id="reserve-end-ts" name="reserve-end-ts" min={inputStart ? inputStart : new Date().toLocaleDateString('fr-ca')} onChange={(e) => setInputEnd(e.target.value)} value={inputEnd} required/>
           <span ref={errSpanEndRef} className="hidden">{errorInputEnd}</span>
           <button type="submit" className="items-center rounded-full bg-chocolate hover:bg-latte px-2 py-1 font-medium dark:bg-latte dark:text-gray-300 dark:hover:bg-chocolate" onClick={(e) => handleAddCart(e)}>Add To Cart</button>
         </form>
