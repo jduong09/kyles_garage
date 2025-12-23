@@ -82,8 +82,8 @@ const CatalogItem = ({ cart, setCart, item, idx, deleteItem }) => {
   }
 
   return (
-    <div className="flex flex-col justify-start items-start p-3 rounded-lg bg-light-brown dark:bg-neutral-800 h-full">
-      <div className="w-full flex justify-between items-center mb-2">
+    <div className="flex flex-wrap justify-start items-start p-3 rounded-lg bg-light-brown dark:bg-neutral-800 h-full">
+      <div className="w-full flex flex-1 justify-between items-center mb-2">
         <h2 className="font-bold text-lg text-chocolate dark:text-latte">{item.name}</h2>
         {cart.find((cartItem) => cartItem.inventory_uuid === item.inventory_uuid) && 
         <button 
@@ -94,10 +94,10 @@ const CatalogItem = ({ cart, setCart, item, idx, deleteItem }) => {
             Added
         </button>}
       </div>
-      <div className="mb-2 dark:text-gray-300">{item.description}</div>
-      <div className="mb-2 inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-800 inset-ring inset-ring-green-600/20 dark:bg-green-600/10 dark:text-green-700 dark:inset-ring-green-700/20">Daily Rate: ${Number(item.price / 100).toFixed(2)}</div>
-      <button className={`self-end items-center rounded-full w-8 h-8 bg-chocolate hover:bg-latte px-1 py-1 font-medium dark:bg-latte dark:text-gray-300 dark:hover:bg-chocolate ${isOpen ? 'rotate-45' : ''}`} onClick={() => toggleAvailability()}>+</button>
-      <div className={isOpen ? '' : 'hidden'}>
+      <div className="w-full mb-2 dark:text-gray-300">{item.description}</div>
+      <div className="inline-flex items-center self-end rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-800 inset-ring inset-ring-green-600/20 dark:bg-green-600/10 dark:text-green-700 dark:inset-ring-green-700/20">Daily Rate: ${Number(item.price / 100).toFixed(2)}</div>
+      <button className={`self-end ml-auto items-center rounded-full w-8 h-8 bg-chocolate hover:bg-latte px-1 py-1 font-medium dark:bg-latte dark:text-gray-300 dark:hover:bg-chocolate ${isOpen ? 'rotate-45' : ''}`} onClick={() => toggleAvailability()}>+</button>
+      <div className={`w-full mt-2 ${isOpen ? '' : 'hidden'}`}>
         <form className="flex flex-col">
           <label className="font-bold mb-1 text-chocolate dark:text-latte" htmlFor="reserve-start-ts">
             Start Date:
