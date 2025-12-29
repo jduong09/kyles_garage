@@ -1,7 +1,7 @@
 import express from 'express';
 import 'dotenv/config';
-import session from "express-session";
-import jwt from "jsonwebtoken";
+import session from 'express-session';
+import jwt from 'jsonwebtoken';
 import { getKey } from './utilityFunctions.js';
 import { execute, migrate } from './db.js';
 import { inventoryScript } from './scripts/001_inventory.js';
@@ -39,8 +39,8 @@ app.use(session({
   cookie: {
     httpOnly: true,
     secure: false,
-    sameSite: "none",
-    maxAge: 1000 * 60 * 60 * 24
+    sameSite: 'none',
+    maxAge: 1000 * 60 * 60 * 24,
   }
 }));
 
@@ -75,37 +75,37 @@ app.post('/user', async (req, res) => {
   let user;
   const result = await execute('/sql/users/get_by_email.sql', [email, status]);
 
-  if (!result.rows.length) {
-    user = await execute('/sql/users/put.sql', [email, status]);
-  } else {
+  if (result.rows.length) {
     user = result.rows[0];
+  } else {
+    user = await execute('/sql/users/put.sql', [email, status]);
   }
 
   res.send({ ok: true, status });
 });
 
-app.post("/session/login", async (req, res) => {
+app.post('/session/login', async (req, res) => {
   const { idToken } = req.body;
 
-  jwt.verify(idToken, getKey, { audience: CLIENT_ID, issuer: `https://${CLIENT_DOMAIN}/`, algorithms: ["RS256"]}, (err, decoded) => {
-    if (err) return res.status(401).send("Invalid Auth0 token");
+  jwt.verify(idToken, getKey, { audience: CLIENT_ID, issuer: `https://${CLIENT_DOMAIN}/`, algorithms: ['RS256']}, (err, decoded) => {
+    if (err) return res.status(401).send('Invalid Auth0 token');
 
     req.session.user = {
       sub: decoded.sub,
       email: decoded.email,
-      name: decoded.name
-    }
+      name: decoded.name,
+    };
     res.send({ ok: true });
   });
 });
 
-app.post("/session/logout", (req, res) => {
+app.post('/session/logout', (req, res) => {
   req.session.destroy(() => {
-    res.clearCookie("connect.sid", {
+    res.clearCookie('connect.sid', {
       httpOnly: true,
       secure: false,
-      sameSite: "none",
-      maxAge: 1000 * 60 * 60 * 24
+      sameSite: 'none',
+      maxAge: 1000 * 60 * 60 * 24,
     });
     res.send({ ok: true });
   });

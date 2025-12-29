@@ -6,7 +6,7 @@ export const Header = ({ cart, loginPage }) => {
   const location = useLocation();
 
   const handleLogout = async () => {
-    await fetch("http://localhost:3000/session/logout", {
+    await fetch('http://localhost:3000/session/logout', {
       method: 'POST',
     });
     localStorage.removeItem("status");
