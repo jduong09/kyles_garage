@@ -6,7 +6,7 @@ const Drawer = ({ deleteItem, cart, setOpen, isOpen}) => {
       <li key={idx} className="flex flex-wrap justify-between items-center">
         <h3 className="flex-1/2 text-lg font-bold text-chocolate dark:text-latte">{item.name}</h3>
         <div className="flex-1/2 text-end font-bold text-chocolate dark:text-latte">${item.finalPrice}</div>
-        <div className="flex-1/2 dark:text-white">Rate: ${item.price / 100} / {item.days}</div>
+        <div className="flex-1/2 dark:text-white">Rate: ${Number(item.price / 100).toFixed(2)} / {item.days}</div>
         <button className="flex-1/2 text-end text-red-500 font-bold hover:text-red-400" onClick={() => deleteItem(item)}>Remove</button>
       </li>);
   });
@@ -30,9 +30,9 @@ const Drawer = ({ deleteItem, cart, setOpen, isOpen}) => {
         <ul className="p-4 border-b-2">{displayedItems}</ul>
         <div className="p-4 flex flex-wrap justify-between items-center mt-auto">
           <h3 className="flex-1/2 font-bold dark:text-latte">Total</h3>
-          <div className="flex-1/2 text-end font-bold dark:text-white">${cart.reduce((total, curr) => (total + parseFloat(curr.finalPrice)).toFixed(2), 0)}</div>
-          <NavLink to="/checkout" end>
-            <button className="flex-1 items-center rounded-full bg-chocolate hover:bg-latte mt-4 px-1 py-2 font-medium dark:bg-latte dark:text-gray-300 dark:hover:bg-chocolate" onClick={() => setOpen(false)}>Checkout</button>
+          <div className="flex-1/2 text-end font-bold dark:text-white">${cart.reduce((total, curr) => (parseFloat(total) + parseFloat(curr.finalPrice)).toFixed(2), 0)}</div>
+          <NavLink to="/checkout" className="flex-1 w-full mt-4" end>
+            <span className="block text-center rounded-full bg-chocolate hover:bg-latte px-1 py-2 font-medium dark:bg-latte dark:text-gray-300 dark:hover:bg-chocolate" onClick={() => setOpen(false)}>Checkout</span>
           </NavLink >
         </div>
       </div>}
