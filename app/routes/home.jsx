@@ -1,4 +1,4 @@
-import { Landing } from '../landing/landing';
+import { Landing } from '.landing.jsx';
 
 export function meta() {
   return [

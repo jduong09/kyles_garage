@@ -5,11 +5,13 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useNavigate,
 } from 'react-router';
 import { useState } from 'react';
 import { Header } from './header';
 import Drawer from './drawer';
-import "./app.css";
+import { Auth0Provider } from '@auth0/auth0-react';
+import './app.css';
 
 
 export const links = () => [
@@ -25,7 +27,19 @@ export const links = () => [
   },
 ];
 
+const { VITE_APP_DOMAIN, VITE_APP_CLIENT_ID } = import.meta.env;
+
 export function Layout({ children }) {
+  const navigate = useNavigate();
+
+  const onRedirectCallback = (appState) => {
+    if (appState.navState) {
+      navigate(appState.returnTo, { state: { cart: appState.navState.cart }});
+    } else {
+      navigate(appState?.returnTo || 'http://localhost:5173', { state: { status: appState.status }});
+    }
+  }
+
   return (
     <html lang="en">
       <head>
@@ -35,7 +49,16 @@ export function Layout({ children }) {
         <Links />
       </head>
       <body>
+        <Auth0Provider
+          domain={VITE_APP_DOMAIN}
+          clientId={VITE_APP_CLIENT_ID}
+          authorizationParams={{
+            redirect_uri: 'http://localhost:5173'
+          }}
+          onRedirectCallback={onRedirectCallback}
+        >
         {children}
+        </Auth0Provider>
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -55,7 +78,7 @@ export default function App() {
 
   return (
     <div>
-      <Header cart={cart} setOpen={setOpen} isOpen={isOpen} />
+      <Header cart={cart} loginPage={false} setOpen={setOpen} isOpen={isOpen} />
       <Outlet context={{cart, setCart, deleteItem}} />
       <Drawer deleteItem={deleteItem} cart={cart} setOpen={setOpen} isOpen={isOpen} />
       <div id="drawer-overlay"
@@ -66,15 +89,15 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
+  let message = 'Oops!';
+  let details = 'An unexpected error occurred.';
   let stack;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
+    message = error.status === 404 ? '404' : 'Error';
     details =
       error.status === 404
-        ? "The requested page could not be found."
+        ? 'The requested page could not be found.'
         : error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;

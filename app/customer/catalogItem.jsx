@@ -81,23 +81,28 @@ const CatalogItem = ({ cart, setCart, item, deleteItem }) => {
     toggleAvailability();
   }
 
+  // flex flex-wrap justify-start items-start 
   return (
-    <div className="flex flex-col justify-start items-start p-3 rounded-lg bg-light-brown dark:bg-neutral-800 h-full">
-      <div className="w-full flex justify-between items-center mb-2">
-        <h2 className="font-bold text-lg text-chocolate dark:text-latte">{item.name}</h2>
-        {cart.find((cartItem) => cartItem.inventory_uuid === item.inventory_uuid) && 
-        <button 
-          onMouseEnter={(e) => e.target.innerText = 'Remove'} 
-          onMouseLeave={(e) => e.target.innerText = 'Added'} 
-          onClick={() => deleteItem(item)} 
-          className="rounded-full bg-orange-50 px-2 py-1 text-xs font-bold text-orange-700 inset-ring inset-ring-orange-600/20 dark:bg-orange-400/10 dark:text-orange-400 dark:inset-ring-orange-500/20">
-            Added
-        </button>}
+    <div className="flex flex-wrap justify-start p-3 rounded-lg bg-light-brown dark:bg-neutral-800 h-full">
+      <div>
+        <div className="w-full flex flex-1 justify-between items-center mb-2">
+          <h2 className="font-bold text-lg text-chocolate dark:text-latte">{item.name}</h2>
+          {cart.find((cartItem) => cartItem.inventory_uuid === item.inventory_uuid) && 
+          <button 
+            onMouseEnter={(e) => e.target.innerText = 'Remove'} 
+            onMouseLeave={(e) => e.target.innerText = 'Added'} 
+            onClick={() => deleteItem(item)} 
+            className="rounded-full bg-orange-50 px-2 py-1 text-xs font-bold text-orange-700 inset-ring inset-ring-orange-600/20 dark:bg-orange-400/10 dark:text-orange-400 dark:inset-ring-orange-500/20">
+              Added
+          </button>}
+        </div>
+        <div className="w-full mb-2 dark:text-gray-300">{item.description}</div>
       </div>
-      <div className="mb-2 dark:text-gray-300">{item.description}</div>
-      <div className="mb-2 inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-800 inset-ring inset-ring-green-600/20 dark:bg-green-600/10 dark:text-green-700 dark:inset-ring-green-700/20">Daily Rate: ${Number(item.price / 100).toFixed(2)}</div>
-      <button className={`self-end items-center rounded-full w-8 h-8 bg-chocolate hover:bg-latte px-1 py-1 font-medium dark:bg-latte dark:text-gray-300 dark:hover:bg-chocolate ${isOpen ? 'rotate-45' : ''}`} onClick={() => toggleAvailability()}>+</button>
-      <div className={isOpen ? '' : 'hidden'}>
+      <div className="w-full mt-auto flex">
+        <div className="inline-flex items-center self-end rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-800 inset-ring inset-ring-green-600/20 dark:bg-green-600/10 dark:text-green-700 dark:inset-ring-green-700/20">Daily Rate: ${Number(item.price / 100).toFixed(2)}</div>
+        <button className={`self-end ml-auto items-center rounded-full w-8 h-8 bg-chocolate hover:bg-latte px-1 py-1 font-medium dark:bg-latte dark:text-gray-300 dark:hover:bg-chocolate ${isOpen ? 'rotate-45' : ''}`} onClick={() => toggleAvailability()}>+</button>
+      </div>
+      <div className={`w-full mt-2 ${isOpen ? '' : 'hidden'}`}>
         <form className="flex flex-col">
           <label className="font-bold mb-1 text-chocolate dark:text-latte" htmlFor="reserve-start-ts">
             Start Date:
@@ -107,7 +112,7 @@ const CatalogItem = ({ cart, setCart, item, deleteItem }) => {
           <label className="font-bold mb-1 text-chocolate dark:text-latte" htmlFor="reserve-end-ts">
             End Date:
           </label>
-          <input className="size-fit rounded-full bg-cinnamon px-2 py-1 mb-2 dark:bg-neutral-500 dark:text-gray-300" type="date" id="reserve-end-ts" name="reserve-end-ts" min={inputStart ? inputStart : ''} onChange={(e) => setInputEnd(e.target.value)} value={inputEnd} required/>
+          <input className="size-fit rounded-full bg-cinnamon px-2 py-1 mb-2 dark:bg-neutral-500 dark:text-gray-300" type="date" id="reserve-end-ts" name="reserve-end-ts" min={inputStart ? inputStart : new Date().toLocaleDateString('fr-ca')} onChange={(e) => setInputEnd(e.target.value)} value={inputEnd} required/>
           <span ref={errSpanEndRef} className="hidden">{errorInputEnd}</span>
           <button type="submit" className="items-center rounded-full bg-chocolate hover:bg-latte px-2 py-1 font-medium dark:bg-latte dark:text-gray-300 dark:hover:bg-chocolate" onClick={(e) => handleAddCart(e)}>Add To Cart</button>
         </form>

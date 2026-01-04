@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react';
 import CatalogItem from './catalogItem';
 import { useOutletContext } from 'react-router';
 
-export default function Catalog() {
+const Catalog = () => {
   const [items, setItems] = useState([]);
   const { cart, setCart, deleteItem } = useOutletContext();
   
   useEffect(() => {
     const getItems = async () => {
       try {
-        const response = await fetch("http://localhost:3000/inventory");
+        const response = await fetch('http://localhost:3000/inventory');
     
         if (!response.ok) {
           throw new Error (`Response Status: ${response.status}`);
@@ -46,3 +46,5 @@ export default function Catalog() {
     </div>
   );
 }
+
+export default Catalog;
