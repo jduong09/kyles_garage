@@ -1,7 +1,5 @@
-import { Header } from '../header';
 import { Landing } from './landing';
-import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router';
+import { useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 
 export function meta() {
@@ -12,15 +10,7 @@ export function meta() {
 }
 
 export default function Home() {
-  const location = useLocation();
-  const [cart, setCart] = useState([]);
   const { isAuthenticated, user, getIdTokenClaims } = useAuth0();
-
-  useEffect(() => {
-    if (location.state) {
-      setCart(location.state.cart);
-    }
-  }, []);
 
   useEffect(()  => {
     const syncUser = async () => {
@@ -53,7 +43,6 @@ export default function Home() {
   }, [isAuthenticated]);
 
   return (<div>
-    <Header cart={cart} loginPage={false} />
     <Landing />
   </div>);
 }

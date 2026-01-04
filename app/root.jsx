@@ -7,8 +7,12 @@ import {
   ScrollRestoration,
   useNavigate,
 } from 'react-router';
+import { useState } from 'react';
+import { Header } from './header';
+import Drawer from './drawer';
 import { Auth0Provider } from '@auth0/auth0-react';
 import './app.css';
+
 
 export const links = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -63,7 +67,25 @@ export function Layout({ children }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  const [cart, setCart] = useState([]);
+  const [isOpen, setOpen] = useState(false);
+
+  const deleteItem = (item) => {
+    setCart(cart.filter(cartItem => {
+      return cartItem.inventory_uuid !== item.inventory_uuid;
+    }));
+  }
+
+  return (
+    <div>
+      <Header cart={cart} loginPage={false} setOpen={setOpen} isOpen={isOpen} />
+      <Outlet context={{cart, setCart, deleteItem}} />
+      <Drawer deleteItem={deleteItem} cart={cart} setOpen={setOpen} isOpen={isOpen} />
+      <div id="drawer-overlay"
+          className={`w-full h-full absolute top-0 left-0 z-4 bg-black opacity-75 ${isOpen === true ? "visible" : "invisible"}`}
+          onClick={() => setOpen(false)}></div>
+    </div>
+  );
 }
 
 export function ErrorBoundary({ error }) {
