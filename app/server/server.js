@@ -1,10 +1,14 @@
 import express from 'express';
 import 'dotenv/config';
+import stripe from 'stripe';
 import session from 'express-session';
 import jwt from 'jsonwebtoken';
 import { getKey } from './utilityFunctions.js';
 import { execute, migrate } from './db.js';
 import { inventoryScript } from './scripts/001_inventory.js';
+
+
+const stripeAPI = stripe(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -64,6 +68,19 @@ app.get('/inventory', async (req, res) => {
     }
   });
   await res.status(200).send(JSON.stringify({ items }));
+});
+
+app.post('/checkout', async (req, res) => {
+  const { price } = req.body;
+  const paymentIntent = await stripeAPI.paymentIntents.create({
+    amount: price,
+    currency: 'usd',
+    automatic_payment_methods: {
+      enabled: true,
+    },
+  });
+
+  res.json({ client_secret: paymentIntent.client_secret });
 });
 
 app.get('/checkout', (req, res) => {
