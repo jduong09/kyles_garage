@@ -4,7 +4,7 @@ import { useLocation } from 'react-router';
 
 const SECONDS_IN_DAY = 86400000;
 
-export default function Catalog() {
+const Catalog = () => {
   const location = useLocation();
   const [items, setItems] = useState([]);
   const [cart, setCart] = useState([]);
@@ -20,7 +20,7 @@ export default function Catalog() {
   useEffect(() => {
     const getItems = async () => {
       try {
-        const response = await fetch("http://localhost:3000/inventory");
+        const response = await fetch('http://localhost:3000/inventory');
     
         if (!response.ok) {
           throw new Error (`Response Status: ${response.status}`);
@@ -35,7 +35,7 @@ export default function Catalog() {
     }
     getItems();
 
-    if (location.state.cart.length) {
+    if (location.state && location.state.cart) {
       setCart(location.state.cart);
     }
   }, []);
@@ -147,12 +147,15 @@ export default function Catalog() {
       </div>
     </li>)
   });
+
   return (
   <div>
-    <Header cart={cart}/>
+    <Header cart={cart} loginPage={false} />
     <div className="p-4">
       <h2 className="text-3xl font-bold mb-4">Inventory</h2>
       <div><ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">{displayedItems}</ul></div>
     </div>
   </div>);
 }
+
+export default Catalog;

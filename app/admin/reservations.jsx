@@ -1,4 +1,5 @@
-import { AdminHeader } from '../admin-header';
+import { AdminHeader } from './adminHeader';
+import { RequireAuth } from '../requireAuth';
 
 const reservations = [
   {
@@ -172,4 +173,4 @@ const Reservations = () => (
   </div>
 );
 
-export default Reservations;
+export default RequireAuth(Reservations, 'internal');
