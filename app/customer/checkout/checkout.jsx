@@ -1,5 +1,5 @@
-import { Header } from '../header';
-import { useLocation } from 'react-router';
+import { Header } from '../../header';
+import { NavLink, useLocation } from 'react-router';
 import { useEffect, useState } from 'react';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
@@ -63,15 +63,20 @@ const Checkout = () => {
 
   return (
     <div className="p-4">
-      <Header cart={cart} />
-      <div className="bg-gray-500 p-2">
+      <Header cart={cart} loginPage={false} />
+      <div className="flex flex-col bg-gray-500 p-2 w-1/2 m-auto">
         <h2 className="text-3xl font-bold pb-4 mb-4 border-b-4">Checkout</h2>
+<<<<<<< HEAD:app/checkout/checkout.jsx
         <ul className="flex flex-col">{listCart}</ul>
         <button onClick={handlePayment}>Send Stripe Request</button>
         {clientSecret && 
         <Elements options={options} stripe={stripePromise}>
           <CheckoutForm />
         </Elements>}
+=======
+        <ul className="flex flex-col pb-4 mb-4 border-b-4">{listCart}</ul>
+        {listCart.length && <NavLink to="/payment" className="self-end items-center rounded-full bg-blue-600 hover:bg-blue-700 px-2 py-1 font-medium dark:bg-blue-500" state={{ cart: cart }}>Payment &#8594;</NavLink>}
+>>>>>>> main:app/customer/checkout/checkout.jsx
       </div>
     </div>
   );
