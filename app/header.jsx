@@ -33,9 +33,21 @@ export const Header = ({ cart, loginPage }) => {
             {cart.length !== 0 && <span className="w-2 h-2 p-2 rounded-full bg-black dark:bg-orange-600 text-white text-xs flex items-center justify-center absolute bottom-4 left-4">{cart.length}</span>}
           </div>
         </NavLink>
-        {!loginPage && isAuthenticated && <NavLink to="/profile" className="mr-8" state={{ cart: cart || [] }} end>Profile</NavLink>}
-        {!loginPage && !isAuthenticated && <NavLink to="/login" className="mr-8" state={{ cart: cart || [], currentPath: location.pathname }} end>Login</NavLink>}
-        {!loginPage && isAuthenticated && <button type="button" onClick={() => handleLogout()}>Log Out</button>}
+        {!loginPage && isAuthenticated &&
+          <NavLink to="/profile" className="font-bold mr-2 group transition duration-300" state={{ cart: cart || [] }} end>
+            Profile
+            <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-chocolate dark:bg-latte"></span>
+          </NavLink>}
+        {!loginPage && !isAuthenticated &&
+        <NavLink to="/login" className="font-bold mr-2 group transition duration-300" state={{ cart: cart || [], currentPath: location.pathname }} end>
+          Login
+          <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-chocolate dark:bg-latte"></span>
+        </NavLink>}
+        {!loginPage && isAuthenticated &&
+        <button type="button" className="font-bold mr-2 group transition duration-300" onClick={() => handleLogout()}>
+          Log Out
+          <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-chocolate dark:bg-latte"></span>
+        </button>}
         <ThemeToggle />
       </nav>
     </header>
