@@ -5,7 +5,6 @@
   "scripts": {
     "build": "react-router build",
     "dev": "concurrently 'node app/server/server.js' 'react-router dev'",
-    "dev:server": "node app/server/server.js",
     "start": "react-router-serve ./build/server/index.js"
   },
   "dependencies": {
