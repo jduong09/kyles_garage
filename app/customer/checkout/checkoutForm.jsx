@@ -30,7 +30,7 @@ const CheckoutForm = () => {
   return (
     <form onSubmit={handleSubmit}>
       <PaymentElement />
-      <button disabled={!stripe}>Submit</button>
+      <button disabled={!stripe} className="items-center rounded-full bg-blue-600 hover:bg-blue-700 px-2 py-1 font-medium dark:bg-blue-500">Submit</button>
       {errorMessage && <div>{errorMessage}</div>}
     </form>
   );
