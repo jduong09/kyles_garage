@@ -35,9 +35,7 @@ const Catalog = () => {
 
   const deleteItem = (e, cartId) => {
     e.preventDefault();
-    setCart(cart.filter(cartItem => {
-      return cartItem.cartId !== cartId;
-    }));
+    setCart(cart => cart.filter(cartItem => cartItem.cartId !== cartId));
   }
 
   const openDeleteModal = (item) => {
@@ -45,21 +43,17 @@ const Catalog = () => {
     setBoolDeleteModal(true);
   } 
 
-  const displayedItems = items.map((item, idx) => {
+  const displayedItems = items.map((item) => {
     return (
-      <li key={idx}>
+      <li key={item.sku}>
         <CatalogItem
           cart={cart}
           setCart={setCart}
           item={item}
-          idx={idx}
-          deleteItem={deleteItem}
           openDeleteModal={openDeleteModal}
         />
       </li>);
   });
-
-  console.log(cart);
 
   return (
     <div>
