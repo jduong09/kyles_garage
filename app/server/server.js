@@ -61,6 +61,7 @@ app.get('/inventory', async (req, res) => {
       images: item.images,
       tags: item.tag_id,
       inventory_uuid: item.inventory_uuid,
+      quantity: item.quantity,
     }
   });
   await res.status(200).send(JSON.stringify({ items }));

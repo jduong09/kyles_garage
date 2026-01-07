@@ -55,6 +55,13 @@ const Catalog = () => {
       </li>);
   });
 
+  /*
+  Edge Cases for Quantity
+  Error Display when Quantity of item is 2 and under (dynamic)
+  Error Message when Quantity of item is out of stock.
+  Error message for when trying to reserve more than 2? depends on item...
+  */
+
   return (
     <div>
       <Header cart={cart} loginPage={false}/>
