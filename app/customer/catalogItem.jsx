@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 
 const SECONDS_IN_DAY = 86400000;
 
-const CatalogItem = ({ cart, setCart, item, idx, deleteItem }) => {
+const CatalogItem = ({ cart, setCart, item, openDeleteModal }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [errorInputStart, setErrorInputStart] = useState('');
   const [errorInputEnd, setErrorInputEnd] = useState('');
@@ -75,25 +75,24 @@ const CatalogItem = ({ cart, setCart, item, idx, deleteItem }) => {
     const startDate = new Date (inputStart.slice(0, 4), inputStart.slice(5, 7) - 1, inputStart.slice(8, 10));
 
     const numOfReservedDays = (endDate - startDate === 0) ? 1 : ((endDate - startDate) / SECONDS_IN_DAY);
-    setCart([...cart, { inventory_uuid: item.inventory_uuid, name: item.name, price: Number((item.price / 100) * numOfReservedDays).toFixed(2), startDate, endDate }]);
+    setCart([...cart, { inventory_uuid: item.inventory_uuid, name: item.name, price: Number((item.price / 100) * numOfReservedDays).toFixed(2), startDate, endDate, cartId: cart.length + 1 }]);
     setInputStart('');
     setInputEnd('');
     toggleAvailability();
   }
 
-  // flex flex-wrap justify-start items-start 
   return (
     <div className="flex flex-wrap justify-start p-3 rounded-lg bg-light-brown dark:bg-neutral-800 h-full">
       <div>
         <div className="w-full flex flex-1 justify-between items-center mb-2">
           <h2 className="font-bold text-lg text-chocolate dark:text-latte">{item.name}</h2>
           {cart.find((cartItem) => cartItem.inventory_uuid === item.inventory_uuid) && 
-          <button 
+          <button
             onMouseEnter={(e) => e.target.innerText = 'Remove'} 
-            onMouseLeave={(e) => e.target.innerText = 'Added'} 
-            onClick={() => deleteItem(item)} 
+            onMouseLeave={(e) => e.target.innerText = `Added: ${cart.filter((cartItem) => cartItem.name === item.name).length}`} 
+            onClick={() => openDeleteModal(item)} 
             className="rounded-full bg-orange-50 px-2 py-1 text-xs font-bold text-orange-700 inset-ring inset-ring-orange-600/20 dark:bg-orange-400/10 dark:text-orange-400 dark:inset-ring-orange-500/20">
-              Added
+              {`Added: ${cart.filter((cartItem) => cartItem.name === item.name).length}`}
           </button>}
         </div>
         <div className="w-full mb-2 dark:text-gray-300">{item.description}</div>
