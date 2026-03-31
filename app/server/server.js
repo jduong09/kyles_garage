@@ -7,7 +7,6 @@ import { getKey } from './utilityFunctions.js';
 import { execute, migrate } from './db.js';
 import { inventoryScript } from './scripts/001_inventory.js';
 
-
 const stripeAPI = stripe(process.env.STRIPE_SECRET_KEY);
 
 const app = express();

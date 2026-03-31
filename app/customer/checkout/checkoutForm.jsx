@@ -2,6 +2,9 @@ import React from 'react';
 import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
 import { useState } from 'react';
 
+// input PROD URL into .env
+const returnUrl = import.meta.env.VITE_NODE_ENV === 'PROD' ? import.meta.env.VITE_STRIPE_PROD_URL : 'http://localhost:5173/order/complete';
+ 
 const CheckoutForm = () => {
   const stripe = useStripe();
   const elements = useElements();
@@ -18,7 +21,7 @@ const CheckoutForm = () => {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: 'http://localhost:5173/order/complete',
+        return_url: returnUrl,
       }
     });
 
