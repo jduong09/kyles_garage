@@ -22,7 +22,6 @@ const LoginPage = () => {
 
   return (
     <div>
-      <Header cart={location.state.cart} loginPage={true}/>
       <div className="mt-8 flex size-full justify-center gap-10">
         <div className="flex flex-col">
           <h2 className="mb-2">New, or existing customer?</h2>
