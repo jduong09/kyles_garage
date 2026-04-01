@@ -1,4 +1,5 @@
-import { AdminHeader } from '../admin-header';
+import { AdminHeader } from './adminHeader';
+import { RequireAuth } from '../requireAuth';
 
 const employees = [
   {
@@ -78,4 +79,4 @@ const Employees = () => (
   </div>
 );
 
-export default Employees;
+export default RequireAuth(Employees, 'internal');

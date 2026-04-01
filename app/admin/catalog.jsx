@@ -1,4 +1,5 @@
-import { AdminHeader } from '../admin-header';
+import { AdminHeader } from './adminHeader.jsx';
+import { RequireAuth } from '../requireAuth.jsx';
 
 // TODO: Remove this eventually -- this is just testing data
 const seedData = {
@@ -316,9 +317,8 @@ const productCard = (catalog_id, name, description, dailyRate) => (
   </div>
 );
 
-const Catalog = () => (
+const AdminCatalog = () => (
   <div>
-    <AdminHeader />
     <h2 className="pl-4 text-xl font-bold">Larger Tools</h2>
     <div className="pl-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
       {seedData.largeTools.map(({catalog_id, name, description, dailyRate}) => productCard(catalog_id, name, description, dailyRate))}
@@ -331,4 +331,4 @@ const Catalog = () => (
   </div>
 );
 
-export default Catalog;
+export default RequireAuth(AdminCatalog, 'internal');
