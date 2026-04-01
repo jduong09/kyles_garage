@@ -14,7 +14,6 @@ const Profile = () => {
   
   return (
     <div className="p-4">
-      <Header cart={cart} />
       <div>This is the Profile Page</div>
     </div>
   );

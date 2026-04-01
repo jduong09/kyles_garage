@@ -1,16 +1,7 @@
-import { Header } from '../../header';
-import { NavLink, useLocation } from 'react-router';
-import { useEffect, useState } from 'react';
+import { useOutletContext, NavLink } from 'react-router';
 
 const Checkout = () => {
-  const location = useLocation();
-  const [cart, setCart] = useState([]);
-
-  useEffect(() => {
-    if (location.state.cart.length) {
-      setCart(location.state.cart);
-    }
-  }, []);
+  const { cart, setCart } = useOutletContext();
 
   const deleteItem = (item) => {
     setCart(cart.filter(cartItem => {
@@ -33,8 +24,7 @@ const Checkout = () => {
 
   return (
     <div className="p-4">
-      <Header cart={cart} loginPage={false} />
-      <div className="flex flex-col w-1/2 ml-auto mr-auto bg-light-brown dark:bg-neutral-800 p-2">
+      <div className="flex flex-col w-1/2 m-auto mr-auto bg-light-brown dark:bg-neutral-800 p-2">
         <h2 className="text-lg font-bold pb-4 mb-4 border-b-4 text-chocolate dark:text-latte">Checkout</h2>
         <ul className="flex flex-col pb-4 mb-4 border-b-4">{listCart}</ul>
         {listCart.length && <NavLink to="/payment" className="self-end items-center rounded-full bg-blue-600 hover:bg-blue-700 px-2 py-1 font-medium dark:bg-blue-500" state={{ cart: cart }}>Payment &#8594;</NavLink>}
