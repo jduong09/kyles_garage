@@ -5,7 +5,6 @@ import { useOutletContext } from 'react-router';
 const Catalog = () => {
   const [items, setItems] = useState([]);
   const { cart, setCart, deleteItem } = useOutletContext();
-  
   useEffect(() => {
     const getItems = async () => {
       try {
